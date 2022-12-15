@@ -1,0 +1,38 @@
+name: 'AUTOSAR CI'
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - '**' 
+  pull_request:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
+  cancel-in-progress: true
+
+jobs:
+  check-links:
+    runs-on: ${{ fromJSON('["ubuntu-latest", "self-hosted"]')[github.repository == 'github/docs-internal'] }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Make build directory
+        run: mkdir build
+
+      - name: Create cmake configuration
+        working-directory: build
+        run: cmake .. -DCMAKE_BUILD_TYPE=Debug -G "Unix Makefiles" 
+
+      - name: Build
+        working-directory: build
+        run: make all
+
+      - name: Run tests
+        working-directory: build/tests
+        run: ./ExampleProject_tests
