@@ -1,9 +1,12 @@
-set(BINARY ${CMAKE_PROJECT_NAME})
+#------------------------------------------------------------------------------
+# Autosar state management
+#------------------------------------------------------------------------------
 
-file(GLOB_RECURSE SOURCES LIST_DIRECTORIES true *.h *.cpp)
+set(SRCS
+        Employee.h
+        Employee.cpp
+        )
 
-set(SOURCES ${SOURCES})
+add_library(src STATIC ${SRCS})
 
-add_executable(${BINARY}_run ${SOURCES})
-
-add_library(${BINARY}_lib STATIC ${SOURCES})
+target_include_directories(src PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

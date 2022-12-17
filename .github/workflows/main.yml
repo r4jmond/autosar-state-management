@@ -16,7 +16,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  Run_UTs:
+  Build:
     runs-on: ${{ fromJSON('["ubuntu-latest", "self-hosted"]')[github.repository == 'github/docs-internal'] }}
     steps:
       - name: Checkout
@@ -29,12 +29,35 @@ jobs:
 
       - name: Create cmake configuration
         working-directory: build
-        run: cmake .. -DCMAKE_BUILD_TYPE=Debug -G "Unix Makefiles" 
+        run: cmake ..
 
       - name: Build
         working-directory: build
         run: make all
 
-      - name: Run tests
-        working-directory: build/tests
-        run: ./ExampleProject_tests
+  UTs:
+    runs-on: ${{ fromJSON('["ubuntu-latest", "self-hosted"]')[github.repository == 'github/docs-internal'] }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Make build directory
+        run: mkdir build
+
+      - name: Create cmake configuration
+        working-directory: build
+        run: cmake .. -DCMAKE_BUILD_TYPE=Debug ..  -Dtest=ON
+
+      - name: Run UTs
+        working-directory: build
+        run: make coverage_testSuite
+        with:
+          packages: lcov
+
+      - name: Archive coverage results
+        uses: actions/upload-artifact@v3
+        with:
+          name: code-coverage-report
+          path: build/coverage_report/index.html

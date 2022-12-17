@@ -1,12 +1,19 @@
-set(BINARY ${CMAKE_PROJECT_NAME}_tests)
+#------------------------------------------------------------------------------
+# Unit Tests
+#------------------------------------------------------------------------------
 
-file(GLOB_RECURSE TEST_SOURCES LIST_DIRECTORIES false *.h *.cpp)
+set( BIN_NAME testSuite )
 
-set(SOURCES ${TEST_SOURCES})
+add_executable( ${BIN_NAME}
+        main.cpp
+        test_Employee.cpp
+        )
 
-add_executable(${BINARY} ${TEST_SOURCES})
+target_link_libraries( ${BIN_NAME} ${GTEST_LIBRARIES} )
+target_link_libraries( ${BIN_NAME} src )
 
-add_test(NAME ${BINARY} COMMAND ${BINARY})
-
-target_link_libraries(${BINARY} PUBLIC ${CMAKE_PROJECT_NAME}_lib gtest)
-
+SETUP_TARGET_FOR_COVERAGE(
+        coverage_${BIN_NAME}
+        ${BIN_NAME}
+        coverage_report
+)
