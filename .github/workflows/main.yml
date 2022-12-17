@@ -50,11 +50,12 @@ jobs:
         working-directory: build
         run: cmake .. -DCMAKE_BUILD_TYPE=Debug ..  -Dtest=ON
 
+      - name: Install lcov
+        run: sudo apt-get install -y lcov
+
       - name: Run UTs
         working-directory: build
         run: make coverage_testSuite
-        with:
-          packages: lcov
 
       - name: Archive coverage results
         uses: actions/upload-artifact@v3
