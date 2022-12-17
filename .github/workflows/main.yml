@@ -61,4 +61,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: code-coverage-report
-          path: build/coverage_report/index.html
+          path: build/coverage_report/
