@@ -45,7 +45,13 @@ jobs:
         uses: deep5050/cppcheck-action@v3.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN}}
+          other_options: --addon=cert
 
+      - name: Archive cppcheck results
+        uses: actions/upload-artifact@v3
+        with:
+          name: cppcheck-report
+          path: cppcheck_report.txt
 
   UTs:
     runs-on: ${{ fromJSON('["ubuntu-latest", "self-hosted"]')[github.repository == 'github/docs-internal'] }}
