@@ -80,3 +80,10 @@ jobs:
         with:
           name: code-coverage-report
           path: build/coverage_report/
+
+      - name: Report code coverage
+        uses: zgosalvez/github-actions-report-lcov@v2
+        with:
+          coverage-files: build/*.info
+          artifact-name: code-coverage-report
+          github-token: ${{ secrets.GITHUB_TOKEN }}
