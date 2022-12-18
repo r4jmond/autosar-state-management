@@ -12,7 +12,7 @@ add_executable( ${BIN_NAME}
 target_link_libraries( ${BIN_NAME} ${GTEST_LIBRARIES} )
 target_link_libraries( ${BIN_NAME} src )
 
-SETUP_TARGET_FOR_COVERAGE(
+SETUP_TARGET_FOR_COVERAGE_COBERTURA(
         coverage_${BIN_NAME}
         ${BIN_NAME}
         coverage_report
