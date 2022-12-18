@@ -67,6 +67,10 @@ jobs:
       - name: Install lcov
         run: sudo apt-get install -y lcov
 
+      - name: Install gcovr
+        run: pip install gcovr
+
+
       - name: Create cmake configuration
         working-directory: build
         run: cmake .. -DCMAKE_BUILD_TYPE=Debug ..  -Dtest=ON
