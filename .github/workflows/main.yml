@@ -40,9 +40,12 @@ jobs:
         working-directory: build
         run: make all
 
-      - name: Build and Run UTs
+      - name: Build UTs
         working-directory: build
         run: make gTests_all
+
+      - name: Run UTs
+        working-directory: build
         run: ./gTests_all --gtest_output=xml:./UTs_report.xml
 
       - name: JUnit Report Action
