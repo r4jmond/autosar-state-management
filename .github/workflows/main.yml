@@ -14,7 +14,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref || pages}}'
+  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
   cancel-in-progress: true
 
 jobs:
@@ -104,7 +104,7 @@ jobs:
       
       - name: Display structure of downloaded files
         run: ls -R
-        working-directory: ./gTestReport/
+        working-directory: path/to/artifact
 
       - name: Setup Pages
         uses: actions/configure-pages@v2
