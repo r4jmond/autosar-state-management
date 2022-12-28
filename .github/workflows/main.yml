@@ -45,7 +45,7 @@ jobs:
         run: make gTests_all
 
       - name: Run UTs
-        working-directory: build
+        working-directory: build/tests
         run: ./gTests_all --gtest_output=xml:./UTs_report.xml
 
       - name: JUnit Report Action
@@ -66,11 +66,20 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN}}
           other_options: --language=c++ --std=c++14 --enable=all --addon=cert.py
 
-      - name: Archive cppcheck results
-        uses: actions/upload-artifact@v3
+      - name: Read Cppcheck results
+        id: cppcheck
+        uses: juliangruber/read-file-action@v1
         with:
-          name: cppcheck-report
-          path: cppcheck_report.txt
+          path: ./cppcheck_report.txt
+
+      - name: Echo Cppcheck results
+        run: echo "${{ steps.cppcheck.outputs.content }}"
+
+      # - name: Archive cppcheck results
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: cppcheck-report
+      #     path: cppcheck_report.txt
 
   # Run UTs:
   #   needs: Build
