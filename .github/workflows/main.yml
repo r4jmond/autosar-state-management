@@ -17,7 +17,6 @@ concurrency:
 
 jobs:
   Build_Run_UTs:
-    needs: Dependencies
     runs-on: ${{ fromJSON('["ubuntu-latest", "self-hosted"]')[github.repository == 'github/docs-internal'] }}
     steps:
       - name: Install lcov
