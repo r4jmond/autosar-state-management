@@ -1,0 +1,134 @@
+name: 'AUTOSAR CI'
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - '**' 
+  pull_request:
+
+permissions:
+  contents: read
+  pull-requests: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
+  cancel-in-progress: true
+
+jobs:
+  Build_Run:
+    runs-on: ${{ fromJSON('["ubuntu-latest", "self-hosted"]')[github.repository == 'github/docs-internal'] }}
+    steps:
+      - name: Install lcov
+        run: sudo apt-get install -y lcov
+
+      - name: Install gcovr
+        run: pip install gcovr
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+            submodules: recursive
+
+      - name: Make build directory
+        run: mkdir build
+
+      - name: Create cmake configuration
+        working-directory: build
+        run: cmake ..
+
+      - name: Build UTs
+        working-directory: build
+        run: make gTests_all
+
+      - name: Run UTs
+        run: ./build/tests/gTests_all --gtest_output=xml:./test-reports/UTs_report.xml
+
+      - name: XUnit Viewer
+        id: xunit-viewer
+        uses: AutoModality/action-xunit-viewer@v1  
+        if: always()
+
+      - name: Attach the GTest Report
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: Google-Test-Report
+          path: ${{ steps.xunit-viewer.outputs.report-dir }}
+
+      - name: Build coverage
+        working-directory: build
+        run: make gTests_coverage
+
+      - name: Attach the Coverage Report
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: Coverage-Report
+          path: build/gTests_coverage
+
+      - name: Attach the index.html
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: Index-GH-Pages
+          path: doc/index.html
+
+  Linters:
+    runs-on: ${{ fromJSON('["ubuntu-latest", "self-hosted"]')[github.repository == 'github/docs-internal'] }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Run cppcheck
+        uses: deep5050/cppcheck-action@v3.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN}}
+          other_options: --language=c++ --std=c++14 --enable=all --addon=cert.py
+  
+      - name: Upload cppcheck result
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: Cppcheck_Report
+          path: ./cppcheck_report.txt
+  
+  Create_GH_Page:
+    needs: [Build_Run, Linters]
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ${{ fromJSON('["ubuntu-latest", "self-hosted"]')[github.repository == 'github/docs-internal'] }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: Index-GH-Pages
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: Google-Test-Report
+          path: ./gTestReport/
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: Coverage-Report
+          path: ./gCovReport/
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: Cppcheck_Report
+          path: ./Cppcheck/
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v2
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: './'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1
