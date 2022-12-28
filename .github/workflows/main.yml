@@ -16,7 +16,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  Dependencies:
+  Build and run UTs:
+    needs: Dependencies
     runs-on: ${{ fromJSON('["ubuntu-latest", "self-hosted"]')[github.repository == 'github/docs-internal'] }}
     steps:
       - name: Install lcov
@@ -24,10 +25,6 @@ jobs:
 
       - name: Install gcovr
         run: pip install gcovr
-  Build:
-    needs: Dependencies
-    runs-on: ${{ fromJSON('["ubuntu-latest", "self-hosted"]')[github.repository == 'github/docs-internal'] }}
-    steps:
       - name: Checkout
         uses: actions/checkout@v3
         with:
@@ -44,8 +41,19 @@ jobs:
         working-directory: build
         run: make all
 
+      - name: Build and Run UTs
+        working-directory: build
+        run: make gTests_all
+             ./gTests_all --gtest_output=xml:./UTs_report.xml
+
+      - name: JUnit Report Action
+        uses: mikepenz/action-junit-report@v3.7.0
+        if: always() # always run even if the previous step fails
+        with:
+          report_paths: '**/build/UTs_report.xml'
+
   Linters:
-    needs: [Dependencies, Build]
+    needs: Build
     runs-on: ${{ fromJSON('["ubuntu-latest", "self-hosted"]')[github.repository == 'github/docs-internal'] }}
     steps:
       - name: Checkout
@@ -63,32 +71,21 @@ jobs:
           name: cppcheck-report
           path: cppcheck_report.txt
 
-  UTs:
-    needs: [Dependencies, Build]
-    runs-on: ${{ fromJSON('["ubuntu-latest", "self-hosted"]')[github.repository == 'github/docs-internal'] }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          submodules: recursive
+  # Run UTs:
+  #   needs: Build
+  #   runs-on: ${{ fromJSON('["ubuntu-latest", "self-hosted"]')[github.repository == 'github/docs-internal'] }}
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v3
+  #       with:
+  #         submodules: recursive
 
-      - name: Make build directory
-        run: mkdir build
+  #     - name: Make build directory
+  #       run: mkdir build
 
-      - name: Create cmake configuration
-        working-directory: build
-        run: cmake .. -DCMAKE_BUILD_TYPE=Debug ..  -Dtest=ON
-
-      - name: Build and Run UTs
-        working-directory: build
-        run: make gTests_all
-             ./gTests_all --gtest_output=xml:./UTs_report.xml
-
-      - name: JUnit Report Action
-        uses: mikepenz/action-junit-report@v3.7.0
-        if: always() # always run even if the previous step fails
-        with:
-          report_paths: '**/build/UTs_report.xml'
+  #     - name: Create cmake configuration
+  #       working-directory: build
+        # run: cmake .. -DCMAKE_BUILD_TYPE=Debug ..
 
 
 #      - name: Archive coverage results
