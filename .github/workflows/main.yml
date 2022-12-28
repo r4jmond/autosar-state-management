@@ -52,8 +52,8 @@ jobs:
         uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: Google-Test-Report.html
-          path: ${{ steps.xunit-viewer.outputs.report-dir }}/index.html
+          name: Google-Test-Report
+          path: ${{ steps.xunit-viewer.outputs.report-dir }}
 
       - name: Build coverage
         working-directory: build
@@ -63,8 +63,8 @@ jobs:
         uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: Coverage-Report.html
-          path: build/gTests_coverage/index.html
+          name: Coverage-Report
+          path: build/gTests_coverage
 
   Linters:
     runs-on: ${{ fromJSON('["ubuntu-latest", "self-hosted"]')[github.repository == 'github/docs-internal'] }}
@@ -85,4 +85,4 @@ jobs:
           path: ./cppcheck_report.txt
 
       - name: Echo Cppcheck results
-        run: echo "${{ steps.cppcheck.outputs.content }} >> $GITHUB_STEP_SUMMARY"
+        run: echo ${{ steps.cppcheck.outputs.content }} >> $GITHUB_STEP_SUMMARY
