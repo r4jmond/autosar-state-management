@@ -43,7 +43,7 @@ jobs:
       - name: Build and Run UTs
         working-directory: build
         run: make gTests_all
-             ./gTests_all --gtest_output=xml:./UTs_report.xml
+        run: ./gTests_all --gtest_output=xml:./UTs_report.xml
 
       - name: JUnit Report Action
         uses: mikepenz/action-junit-report@v3.7.0
