@@ -85,4 +85,4 @@ jobs:
           path: ./cppcheck_report.txt
 
       - name: Echo Cppcheck results
-        run: echo ${{ steps.cppcheck.outputs.content }} >> $GITHUB_STEP_SUMMARY
+        run: echo "${{ steps.cppcheck.outputs.content }}" >> $GITHUB_STEP_SUMMARY
