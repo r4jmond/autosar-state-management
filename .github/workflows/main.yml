@@ -63,7 +63,7 @@ jobs:
         id: html_preview
         uses: pavi2410/html-preview-action@v2
         if: always()
-        with:sca
+        with:
           html_file: ${{ steps.xunit-viewer.outputs.report-dir }}/index.html
 
       - name: Build coverage
