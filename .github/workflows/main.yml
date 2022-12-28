@@ -86,12 +86,6 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN}}
           other_options: --language=c++ --std=c++14 --enable=all --addon=cert.py
-
-      # - name: Read Cppcheck results
-      #   id: cppcheck
-      #   uses: juliangruber/read-file-action@v1
-      #   with:
-      #     path: ./cppcheck_report.txt
   
       - name: Upload cppcheck result
         uses: actions/upload-artifact@v3
@@ -99,9 +93,6 @@ jobs:
         with:
           name: Cppcheck_Report
           path: ./cppcheck_report.txt
-
-      # - name: Echo Cppcheck results
-      #   run: echo "${{ steps.cppcheck.outputs.content }}" >> $GITHUB_STEP_SUMMARY
   
   Create_GH_Page:
     needs: [Build_Run, Linters]
