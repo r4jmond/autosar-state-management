@@ -52,36 +52,45 @@ jobs:
         uses: AutoModality/action-xunit-viewer@v1  
         if: always()
 
-      # - name: Attach the report
-      #   uses: actions/upload-artifact@v1
-      #   if: always()
-      #   with:
-      #     name: ${{ steps.xunit-viewer.outputs.report-name }}
-      #     path: ${{ steps.xunit-viewer.outputs.report-dir }}
-
-      - name: HTML Preview UTs
-        id: html_preview_ut
-        uses: pavi2410/html-preview-action@v2
+      - name: Attach the GTest Report
+        id: gTestReport
+        uses: actions/upload-artifact@v3
         if: always()
         with:
-          html_file: ${{ steps.xunit-viewer.outputs.report-dir }}/index.html
+          name: Google-Test-Report
+          path: ${{ steps.xunit-viewer.outputs.report-dir }}/index.html
 
-      - name: Print_link_to_html_UT
-        run: echo ${{steps.html_preview_ut.outputs.url}} >> $GITHUB_STEP_SUMMARY
+      # - name: HTML Preview UTs
+      #   id: html_preview_ut
+      #   uses: pavi2410/html-preview-action@v2
+      #   if: always()
+      #   with:
+      #     html_file: ${{ steps.gTestReport.outputs. }}/index.html
+
+      # - name: Print_link_to_html_UT
+      #   run: echo ${{steps.html_preview_ut.outputs.url}} >> $GITHUB_STEP_SUMMARY
 
       - name: Build coverage
         working-directory: build
         run: make gTests_coverage
 
-      - name: HTML Preview Coverage
-        id: html_preview_cov
-        uses: pavi2410/html-preview-action@v2
+      - name: Attach the Coverage Report
+        id: gcovReport
+        uses: actions/upload-artifact@v3
         if: always()
         with:
-          html_file: build/gTests_coverage/index.html
+          name: Coverage-Report
+          path: build/gTests_coverage/index.html
 
-      - name: Print_link_to_html_cov
-        run: echo ${{steps.html_preview_cov.outputs.url}} >> $GITHUB_STEP_SUMMARY
+      # - name: HTML Preview Coverage
+      #   id: html_preview_cov
+      #   uses: pavi2410/html-preview-action@v2
+      #   if: always()
+      #   with:
+      #     html_file: build/gTests_coverage/index.html
+
+      # - name: Print_link_to_html_cov
+      #   run: echo ${{steps.html_preview_cov.outputs.url}} >> $GITHUB_STEP_SUMMARY
 
   Linters:
     runs-on: ${{ fromJSON('["ubuntu-latest", "self-hosted"]')[github.repository == 'github/docs-internal'] }}
