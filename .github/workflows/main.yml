@@ -18,6 +18,8 @@ concurrency:
 jobs:
   Build_Run_UTs:
     runs-on: ${{ fromJSON('["ubuntu-latest", "self-hosted"]')[github.repository == 'github/docs-internal'] }}
+    env:
+      RESULTS_PATH: build/tests
     steps:
       - name: Install lcov
         run: sudo apt-get install -y lcov
@@ -46,13 +48,25 @@ jobs:
 
       - name: Run UTs
         working-directory: build/tests
-        run: ./gTests_all --gtest_output=xml:./UTs_report.xml
+        run: ./gTests_all --gtest_output=xml:./test-reports/UTs_report.xml
 
-      - name: JUnit Report Action
-        uses: mikepenz/action-junit-report@v3.7.0
-        if: always() # always run even if the previous step fails
+      - name: XUnit Viewer
+        working-directory: build/tests
+        id: xunit-viewer
+        uses: AutoModality/action-xunit-viewer@v1  
+
+      - name: Attach the report
+        working-directory: build/tests
+        uses: actions/upload-artifact@v1
         with:
-          report_paths: '**/build/UTs_report.xml'
+          name: ${{ steps.xunit-viewer.outputs.report-name }}
+          path: ${{ steps.xunit-viewer.outputs.report-dir }}
+
+      # - name: JUnit Report Action
+      #   uses: mikepenz/action-junit-report@v3.7.0
+      #   if: always() # always run even if the previous step fails
+      #   with:
+      #     report_paths: '**/build/UTs_report.xml'
 
   Linters:
     runs-on: ${{ fromJSON('["ubuntu-latest", "self-hosted"]')[github.repository == 'github/docs-internal'] }}
