@@ -52,7 +52,6 @@ jobs:
           report_paths: '**/build/UTs_report.xml'
 
   Linters:
-    needs: Build
     runs-on: ${{ fromJSON('["ubuntu-latest", "self-hosted"]')[github.repository == 'github/docs-internal'] }}
     steps:
       - name: Checkout
