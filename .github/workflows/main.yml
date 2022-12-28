@@ -16,6 +16,14 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  Dependencies:
+    runs-on: ${{ fromJSON('["ubuntu-latest", "self-hosted"]')[github.repository == 'github/docs-internal'] }}
+    steps:
+      - name: Install lcov
+        run: sudo apt-get install -y lcov
+
+      - name: Install gcovr
+        run: pip install gcovr
   Build:
     runs-on: ${{ fromJSON('["ubuntu-latest", "self-hosted"]')[github.repository == 'github/docs-internal'] }}
     steps:
@@ -64,20 +72,21 @@ jobs:
       - name: Make build directory
         run: mkdir build
 
-      - name: Install lcov
-        run: sudo apt-get install -y lcov
-
-      - name: Install gcovr
-        run: pip install gcovr
-
-
       - name: Create cmake configuration
         working-directory: build
         run: cmake .. -DCMAKE_BUILD_TYPE=Debug ..  -Dtest=ON
 
-      - name: Run UTs
+      - name: Build and Run UTs
         working-directory: build
         run: make gTests_all
+             ./gTests_all --gtest_output=xml:./UTs_report.xml
+
+      - name: JUnit Report Action
+        uses: mikepenz/action-junit-report@v3.7.0
+        if: always() # always run even if the previous step fails
+        with:
+          report_paths: '**/build/UTs_report.xml'
+
 
 #      - name: Archive coverage results
 #        uses: actions/upload-artifact@v3
@@ -85,7 +94,7 @@ jobs:
 #          name: code-coverage-report
 #          path: build/coverage_report/
 
-      - name: Code Coverage Summary Report
-        uses: irongut/CodeCoverageSummary@v1.3.0
-        with:
-          filename: build/coverage_report.xml
+      # - name: Code Coverage Summary Report
+      #   uses: irongut/CodeCoverageSummary@v1.3.0
+      #   with:
+      #     filename: build/coverage_report.xml
