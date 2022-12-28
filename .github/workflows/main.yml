@@ -16,11 +16,16 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # Dependencies:
-  #   runs-on: ${{ fromJSON('["ubuntu-latest", "self-hosted"]')[github.repository == 'github/docs-internal'] }}
-  #   steps:
+  Dependencies:
+    runs-on: ${{ fromJSON('["ubuntu-latest", "self-hosted"]')[github.repository == 'github/docs-internal'] }}
+    steps:
+      - name: Install lcov
+        run: sudo apt-get install -y lcov
 
+      - name: Install gcovr
+        run: pip install gcovr
   Build:
+    needs: Dependencies
     runs-on: ${{ fromJSON('["ubuntu-latest", "self-hosted"]')[github.repository == 'github/docs-internal'] }}
     steps:
       - name: Checkout
@@ -30,12 +35,6 @@ jobs:
 
       - name: Make build directory
         run: mkdir build
-        
-      - name: Install lcov
-        run: sudo apt-get install -y lcov
-
-      - name: Install gcovr
-        run: pip install gcovr
 
       - name: Create cmake configuration
         working-directory: build
@@ -46,6 +45,7 @@ jobs:
         run: make all
 
   Linters:
+    needs: [Dependencies, Build]
     runs-on: ${{ fromJSON('["ubuntu-latest", "self-hosted"]')[github.repository == 'github/docs-internal'] }}
     steps:
       - name: Checkout
@@ -55,7 +55,7 @@ jobs:
         uses: deep5050/cppcheck-action@v3.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN}}
-          other_options: --addon=cert
+          other_options: --language=c++ --std=c++14 --enable=all --addon=cert.py
 
       - name: Archive cppcheck results
         uses: actions/upload-artifact@v3
@@ -64,6 +64,7 @@ jobs:
           path: cppcheck_report.txt
 
   UTs:
+    needs: [Dependencies, Build]
     runs-on: ${{ fromJSON('["ubuntu-latest", "self-hosted"]')[github.repository == 'github/docs-internal'] }}
     steps:
       - name: Checkout
