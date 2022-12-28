@@ -47,16 +47,13 @@ jobs:
         run: make gTests_all
 
       - name: Run UTs
-        working-directory: build/tests
-        run: ./gTests_all --gtest_output=xml:./test-reports/UTs_report.xml
+        run: ./build/tests/gTests_all --gtest_output=xml:./test-reports/UTs_report.xml
 
       - name: XUnit Viewer
-        working-directory: build/tests
         id: xunit-viewer
         uses: AutoModality/action-xunit-viewer@v1  
 
       - name: Attach the report
-        working-directory: build/tests
         uses: actions/upload-artifact@v1
         with:
           name: ${{ steps.xunit-viewer.outputs.report-name }}
