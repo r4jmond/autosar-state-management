@@ -68,6 +68,13 @@ jobs:
           name: Coverage-Report
           path: build/gTests_coverage
 
+      - name: Attach the index.html
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: Index-GH-Pages
+          path: doc/index.html
+
   Linters:
     runs-on: ${{ fromJSON('["ubuntu-latest", "self-hosted"]')[github.repository == 'github/docs-internal'] }}
     steps:
@@ -80,17 +87,24 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN}}
           other_options: --language=c++ --std=c++14 --enable=all --addon=cert.py
 
-      - name: Read Cppcheck results
-        id: cppcheck
-        uses: juliangruber/read-file-action@v1
+      # - name: Read Cppcheck results
+      #   id: cppcheck
+      #   uses: juliangruber/read-file-action@v1
+      #   with:
+      #     path: ./cppcheck_report.txt
+  
+      - name: Upload cppcheck result
+        uses: actions/upload-artifact@v3
+        if: always()
         with:
+          name: Cppcheck_Report
           path: ./cppcheck_report.txt
 
-      - name: Echo Cppcheck results
-        run: echo "${{ steps.cppcheck.outputs.content }}" >> $GITHUB_STEP_SUMMARY
+      # - name: Echo Cppcheck results
+      #   run: echo "${{ steps.cppcheck.outputs.content }}" >> $GITHUB_STEP_SUMMARY
   
   Create_GH_Page:
-    needs: Build_Run
+    needs: [Build_Run, Linters]
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -100,12 +114,22 @@ jobs:
 
       - uses: actions/download-artifact@v3
         with:
+          name: Index-GH-Pages
+
+      - uses: actions/download-artifact@v3
+        with:
           name: Google-Test-Report
           path: ./gTestReport/
-      
-      - name: Display structure of downloaded files
-        run: ls -R
-        working-directory: ./gTestReport
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: Coverage-Report
+          path: ./gCovReport/
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: Cppcheck_Report
+          path: ./Cppcheck/
 
       - name: Setup Pages
         uses: actions/configure-pages@v2
@@ -113,7 +137,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
-          path: './gTestReport'
+          path: './'
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
