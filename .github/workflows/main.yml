@@ -54,18 +54,19 @@ jobs:
         uses: AutoModality/action-xunit-viewer@v1  
         if: always()
 
-      - name: Attach the report
-        uses: actions/upload-artifact@v1
+      # - name: Attach the report
+      #   uses: actions/upload-artifact@v1
+      #   if: always()
+      #   with:
+      #     name: ${{ steps.xunit-viewer.outputs.report-name }}
+      #     path: ${{ steps.xunit-viewer.outputs.report-dir }}
+
+      - name: HTML Preview
+        id: html_preview
+        uses: pavi2410/html-preview-action@v2
         if: always()
         with:
-          name: ${{ steps.xunit-viewer.outputs.report-name }}
-          path: ${{ steps.xunit-viewer.outputs.report-dir }}
-
-      # - name: JUnit Report Action
-      #   uses: mikepenz/action-junit-report@v3.7.0
-      #   if: always() # always run even if the previous step fails
-      #   with:
-      #     report_paths: '**/build/UTs_report.xml'
+          html_file: ${{ steps.xunit-viewer.outputs.report-dir }}/index.html
 
   Linters:
     runs-on: ${{ fromJSON('["ubuntu-latest", "self-hosted"]')[github.repository == 'github/docs-internal'] }}
