@@ -60,7 +60,7 @@ jobs:
       #     path: ${{ steps.xunit-viewer.outputs.report-dir }}
 
       - name: HTML Preview UTs
-        id: html_preview
+        id: html_preview_ut
         uses: pavi2410/html-preview-action@v2
         if: always()
         with:
@@ -71,7 +71,7 @@ jobs:
         run: make gTests_coverage
 
       - name: HTML Preview Coverage
-        id: html_preview
+        id: html_preview_cov
         uses: pavi2410/html-preview-action@v2
         if: always()
         with:
