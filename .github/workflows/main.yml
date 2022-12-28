@@ -67,7 +67,7 @@ jobs:
           html_file: ${{ steps.xunit-viewer.outputs.report-dir }}/index.html
 
       - name: Print_link_to_html_UT
-        run: echo "{steps.html_preview_ut.outputs.url}" >> $GITHUB_STEP_SUMMARY
+        run: echo "${steps.html_preview_ut.outputs.url}" >> $GITHUB_STEP_SUMMARY
 
       - name: Build coverage
         working-directory: build
@@ -81,7 +81,7 @@ jobs:
           html_file: build/gTests_coverage/index.html
 
       - name: Print_link_to_html_cov
-        run: echo "{steps.html_preview_cov.outputs.url}" >> $GITHUB_STEP_SUMMARY
+        run: echo "${{steps.html_preview_cov.outputs.url}}" >> $GITHUB_STEP_SUMMARY
 
   Linters:
     runs-on: ${{ fromJSON('["ubuntu-latest", "self-hosted"]')[github.repository == 'github/docs-internal'] }}
