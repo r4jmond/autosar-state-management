@@ -2,10 +2,7 @@
 # App execution
 #------------------------------------------------------------------------------
 
-set(Main_SRCS main.cpp)
+add_executable(main_test main.cpp)
 
-add_executable(myApp ${Main_SRCS})
-
-target_link_libraries(myApp src)
-
-install(TARGETS myApp DESTINATION bin)
+target_link_libraries(main_test Autosar_SM)
+#install(TARGETS myApp DESTINATION bin)

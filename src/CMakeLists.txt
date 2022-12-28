@@ -7,6 +7,5 @@ set(SRCS
         Employee.cpp
         )
 
-add_library(src STATIC ${SRCS})
-
-target_include_directories(src PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+add_library(Autosar_SM ${SRCS})
+target_include_directories(Autosar_SM PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

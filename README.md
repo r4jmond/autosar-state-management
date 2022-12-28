@@ -1,6 +1,10 @@
 # Autosar State Management
 Basic Autosar Adaptive Platform State Management module implementation
 
+## Cloning the repo with Google Test
+
+`git clone --recurse-submodules https://github.com/r4jmond/autosar-state-management.git`
+
 ## Prerequisites
 
 * gcc
