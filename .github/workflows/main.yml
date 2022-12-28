@@ -16,14 +16,10 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  Dependencies:
-    runs-on: ${{ fromJSON('["ubuntu-latest", "self-hosted"]')[github.repository == 'github/docs-internal'] }}
-    steps:
-      - name: Install lcov
-        run: sudo apt-get install -y lcov
+  # Dependencies:
+  #   runs-on: ${{ fromJSON('["ubuntu-latest", "self-hosted"]')[github.repository == 'github/docs-internal'] }}
+  #   steps:
 
-      - name: Install gcovr
-        run: pip install gcovr
   Build:
     runs-on: ${{ fromJSON('["ubuntu-latest", "self-hosted"]')[github.repository == 'github/docs-internal'] }}
     steps:
@@ -34,6 +30,12 @@ jobs:
 
       - name: Make build directory
         run: mkdir build
+        
+      - name: Install lcov
+        run: sudo apt-get install -y lcov
+
+      - name: Install gcovr
+        run: pip install gcovr
 
       - name: Create cmake configuration
         working-directory: build
