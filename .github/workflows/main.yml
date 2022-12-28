@@ -18,7 +18,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  Build_Run_UTs:
+  Build_Run:
     runs-on: ${{ fromJSON('["ubuntu-latest", "self-hosted"]')[github.repository == 'github/docs-internal'] }}
     steps:
       - name: Install lcov
@@ -90,6 +90,7 @@ jobs:
         run: echo "${{ steps.cppcheck.outputs.content }}" >> $GITHUB_STEP_SUMMARY
   
   Create_GH_Page:
+    needs: Build_Run
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -112,7 +113,6 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
-          # Upload entire repository
           path: './gTestReport'
       - name: Deploy to GitHub Pages
         id: deployment
