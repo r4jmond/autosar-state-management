@@ -17,11 +17,6 @@ set(CMAKE_C_FLAGS "-Wall")
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake_modules)
 include(CodeCoverage)
 append_coverage_compiler_flags()
-# Use command below for generating html report, then build target main_coverage
-#setup_target_for_coverage_gcovr_html (
-#        NAME main_coverage
-#        EXECUTABLE main_test
-#)
 
 #------------------------------------------------------------------------------
 # Subdirectories
@@ -32,9 +27,7 @@ add_subdirectory(main)
 #------------------------------------------------------------------------------
 # Google Test
 #------------------------------------------------------------------------------
-#add_subdirectory(lib/googletest)
-#enable_testing()
-#include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
-#SET( GTEST_LIBRARIES gtest gtest_main gmock gmock_main )
-#SET( CMAKE_BUILD_TYPE Debug )
-#add_subdirectory( tests )
+# SET( CMAKE_BUILD_TYPE Debug )
+# idk if this commented line above may be necessary for some reason, for now leaving it
+add_subdirectory(lib/googletest)
+add_subdirectory(tests)

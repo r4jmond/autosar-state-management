@@ -77,7 +77,7 @@ jobs:
 
       - name: Run UTs
         working-directory: build
-        run: make coverage_testSuite
+        run: make gTests_all
 
 #      - name: Archive coverage results
 #        uses: actions/upload-artifact@v3
