@@ -5,8 +5,7 @@ include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 
 add_executable( gTests_all
         tests.cpp
-        test_Employee.cpp
-        )
+        test_reset_execution.cpp)
 
 SET( GTEST_LIBRARIES gtest gtest_main gmock gmock_main )
 target_link_libraries( gTests_all ${GTEST_LIBRARIES} )
