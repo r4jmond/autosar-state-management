@@ -1,11 +1,12 @@
 #include "trigger_in.h"
 
-void TriggerIn::setTrigger(bool trigger)
-{
-    Trigger = trigger;
-}
+namespace ara { namespace com {
 
-bool TriggerIn::isTrigger() const
-{
-    return Trigger;
-}
+    void TriggerIn::setTrigger(bool trigger) {
+        Trigger = trigger;
+    }
+
+    bool TriggerIn::isTrigger() const {
+        return Trigger;
+    }
+}}

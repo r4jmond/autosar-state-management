@@ -3,45 +3,49 @@
 #include <string>
 #include "update_request.h"
 
-/** @brief Fills [SWS_SM_91012] */
-typedef enum Resp_Type
-{
-    kDone,        /* requested mode sucessfully reached.                             */
-    kFailed,      /* requested mode not reached.                                     */
-    kBusy,        /* can't process requested mode e.g. important things are ongoing. */
-    kNotSupported /* requested mode not supported.                                   */
-} Resp_T;
+namespace ara { namespace sm {
 
-typedef enum Error_Type
-{
-    kSuccess                          = 0,
-    kRejected                         = 5, /* Requested operation was rejected due to State Management
-                                              machines internal state.            */
-    kVerifyFailed                     = 6, /* Verification step of update failed. */
-    kPrepareFailed                    = 7, /* Preparation step of update failed.  */
-    kRollbackFailed                   = 8, /* Rollback step of update failed.     */
-    kNotAllowedMultipleUpdateSessions = 9  /* Request for new session was rejected as only single active
-                                              (update) session is allowed.        */
-} Error_T;
+    /** @brief Fills [SWS_SM_91012] */
+    typedef enum RespType {
+        kDone,        /* requested mode sucessfully reached.                             */
+        kFailed,      /* requested mode not reached.                                     */
+        kBusy,        /* can't process requested mode e.g. important things are ongoing. */
+        kNotSupported /* requested mode not supported.                                   */
+    } RespT;
 
-typedef enum SM_State_Type
-{
-    Start_Engine,
-    Drive,
-    Shutdown
-} SM_State_T;
+    /** @brief Fills [SWS_SM_91010] */
+    typedef enum ErrorType {
+        kSuccess = 0,
+        kRejected = 5, /* Requested operation was rejected due to State Management
+                                                  machines internal state.            */
+        kVerifyFailed = 6, /* Verification step of update failed. */
+        kPrepareFailed = 7, /* Preparation step of update failed.  */
+        kRollbackFailed = 8, /* Rollback step of update failed.     */
+        kNotAllowedMultipleUpdateSessions = 9  /* Request for new session was rejected as only single active
+                                                  (update) session is allowed.        */
+    } ErrorT;
 
-class StateManagement
-{
-public:
-    StateManagement();
-    void Initialize();
-    void Work();
-    void Exit();
-    UpdateRequest myUpdateRequest;
-private:
-    bool killFlag;
-    bool ongoingUpdate;
-};
+    /** @brief Fills [RS_SM_00005] */
+    typedef enum SMStateType {
+        Start_Engine,
+        Drive,
+        Shutdown
+    } SMStateT;
+
+    class StateManagement {
+    public:
+        StateManagement();
+
+        void Initialize();
+
+        void Work();
+
+        void Exit();
+
+        com::UpdateRequest myUpdateRequest;
+    private:
+        bool killFlag;
+    };
+}}
 
 #endif //AUTOSAR_STATE_MANAGEMENT_STATE_MANAGEMENT_H

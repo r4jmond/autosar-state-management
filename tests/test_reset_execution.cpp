@@ -4,7 +4,7 @@
 /** @brief Fills [SWS_SM_00202] */
 TEST(testSuiteSM, testResetExecution)
 {
-    StateManagement mySM;
+    ara::sm::StateManagement mySM;
 
     mySM.myUpdateRequest.ResetMachine();
 
