@@ -2,12 +2,12 @@
 
 namespace ara { namespace com {
 
-    bool TriggerOut::isNotifier() const {
+    bool TriggerOut::IsNotifier() const {
         return notifier;
     }
 
-    void TriggerOut::setNotifier(bool notifier) {
-        TriggerOut::notifier = notifier;
+    void TriggerOut::SetNotifier(bool newNotifier) {
+        TriggerOut::notifier = newNotifier;
     }
 
 }}

@@ -2,11 +2,11 @@
 
 namespace ara { namespace com {
 
-    void TriggerIn::setTrigger(bool trigger) {
-        Trigger = trigger;
+    void TriggerIn::SetTrigger(bool newTrigger) {
+        trigger = newTrigger;
     }
 
-    bool TriggerIn::isTrigger() const {
-        return Trigger;
+    bool TriggerIn::IsTrigger() const {
+        return trigger;
     }
 }}

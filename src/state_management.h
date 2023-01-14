@@ -2,6 +2,9 @@
 #define AUTOSAR_STATE_MANAGEMENT_STATE_MANAGEMENT_H
 #include <string>
 #include "update_request.h"
+#include "trigger_in.h"
+#include "trigger_in_out.h"
+#include "trigger_out.h"
 
 namespace ara { namespace sm {
 
@@ -43,6 +46,11 @@ namespace ara { namespace sm {
         void Exit();
 
         com::UpdateRequest myUpdateRequest;
+        /** @brief Fills [SWS_SM_00020] */
+        com::TriggerOut triggerOut;
+        /** @brief Fills [SWS_SM_00021] */
+        com::TriggerIn triggerIn;
+        com::TriggerInOut triggerInOut;
     private:
         bool killFlag;
     };

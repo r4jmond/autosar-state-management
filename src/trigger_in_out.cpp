@@ -2,19 +2,19 @@
 
 namespace ara { namespace com {
 
-    bool TriggerInOut::isNotifier() const {
+    bool TriggerInOut::IsNotifier() const {
         return notifier;
     }
 
-    void TriggerInOut::setNotifier(bool notifier) {
-        TriggerInOut::notifier = notifier;
+    void TriggerInOut::SetNotifier(bool newNotifier) {
+        TriggerInOut::notifier = newNotifier;
     }
 
-    bool TriggerInOut::isTrigger() const {
+    bool TriggerInOut::IsTrigger() const {
         return trigger;
     }
 
-    void TriggerInOut::setTrigger(bool trigger) {
-        TriggerInOut::trigger = trigger;
+    void TriggerInOut::SetTrigger(bool newTrigger) {
+        TriggerInOut::trigger = newTrigger;
     }
 }}
