@@ -5,6 +5,7 @@
 #include "trigger_in.h"
 #include "trigger_in_out.h"
 #include "trigger_out.h"
+#include "network_handle.h"
 
 namespace ara { namespace sm {
 
@@ -46,6 +47,7 @@ namespace ara { namespace sm {
         void Exit();
 
         com::UpdateRequest myUpdateRequest;
+        com::NetworkHandle myNetworkHandle;
         /** @brief Fills [SWS_SM_00020] */
         com::TriggerOut triggerOut;
         /** @brief Fills [SWS_SM_00021] */
