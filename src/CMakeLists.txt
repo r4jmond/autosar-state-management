@@ -12,7 +12,8 @@ set(SRCS
         trigger_out.cpp
         trigger_out.h
         trigger_in_out.cpp
-        trigger_in_out.h)
+        trigger_in_out.h
+        sm_types.h)
 
 add_library(Autosar_SM ${SRCS})
 target_include_directories(Autosar_SM PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
