@@ -10,41 +10,57 @@ namespace ara { namespace com {
      *         Fills [SWS_SM_91016]. */
     class UpdateRequest {
     public:
+        /** @brief UpdateRequest constructor. */
         UpdateRequest();
         /**
         * @brief ResetMachine
-        * @details Requests a reset of the machine. Before the reset is performed all information within the machine shall
-                   be persisted. Request will be rejected when RequestUpdateSession was not called successfully before
+        * @details Requests a reset of the machine.
+        *          Before the reset is performed all information within the machine shall be persisted.
+        *          Request will be rejected when RequestUpdateSession was not called successfully before.
         * @return error code
         */
-        ara::sm::ErrorType ResetMachine();
+        sm::ErrorType ResetMachine();
         /**
         * @brief StopUpdateSession
         * @details Has to be called by Update And Configuration Management once the update is finished to let State
-                   Management know that the update is done and the Machine is in a stable state. Request will be rejected
-                   when RequestUpdateSession was not called successfully before.
+                   Management know that the update is done and the Machine is in a stable state.
+                   Request will be rejected when RequestUpdateSession was not called successfully before.
         * @return error code
         */
-        ara::sm::ErrorType StopUpdateSession();
+        sm::ErrorType StopUpdateSession();
         /**
          * @brief RequestUpdateSession
-         * @details Has to be called by Update And Configuration Management once it has to start interaction with State
-                    Management. State Management might decline this request when machine is not in a state to be
-                    updated.
+         * @details Has to be called by Update And Configuration Management once it has to start interaction with
+         *          State Management.
+         *          State Management might decline this request when machine is not in a state to be updated.
          * @return error code
          */
-        ara::sm::ErrorType RequestUpdateSession();
+        sm::ErrorType RequestUpdateSession();
         /**
-         * @brief VerifyUpdate
+         * @brief PrepareUpdate
          * @details Has to be called by Update And Configuration Management after State Management allowed to update.
                     State Management will decline this request when RequestUpdateSession was not called before
                     successfully.
-         * @param[in] functionGroupList - The list of FunctionGroups within the SoftwareCluster to be prepared to be updated.
+         * @param[in] functionGroupList - The list of FunctionGroups to be prepared to be updated.
          * @return error code
          */
-        ara::sm::ErrorType PrepareUpdate(sm::FunctionGroupListType functionGroupList);
-//        sm::ErrorT VerifyUpdate();
-//        sm::ErrorT PrepareRollback();
+        sm::ErrorType PrepareUpdate(sm::FunctionGroupListType functionGroupList);
+        /**
+        * @brief VerifyUpdate
+        * @details Has to be called by Update And Configuration Management after State Management allowed to update
+                   and the update preparation has been done. State Management will decline this request when
+                   PrepareUpdate was not called before successfully.
+        * @param[in] functionGroupList - The list of FunctionGroups within the SoftwareCluster to be verified.
+        * @return error code
+        */
+        sm::ErrorType VerifyUpdate() {/*todo implement*/ return sm::ErrorType::kSuccess;}
+        /**
+        * @brief PrepareRollback
+        * @details Has to be called by Update And Configuration Management after State Management allowed to update.
+        * @param[in] functionGroupList - The list of FunctionGroups to be prepared to roll back.
+        * @return error code
+        */
+        sm::ErrorType PrepareRollback() {/*todo implement*/ return sm::ErrorType::kSuccess;}
 
     private:
         bool resetRequest;
