@@ -10,11 +10,8 @@ namespace ara { namespace sm {
     void StateManagement::Work() {
         std::cout << "Starting work" << std::endl;
         while (!killFlag) {
-            if (myUpdateRequest.isOngoingUpdate()) {
-                std::cout << "Updating in progress" << std::endl;
-            }
 
-            if (myUpdateRequest.isResetRequest()) {
+            if (myUpdateRequest.IsResetRequest()) {
                 // reset
             } else {
                 //don't reset??
