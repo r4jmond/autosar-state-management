@@ -65,6 +65,8 @@ namespace ara { namespace com {
     private:
         bool resetRequest;
     public:
+        /** @brief resetRequest setter used by SM. */
+        void SetResetRequest(bool newResetRequest);
         /**
          * @brief resetRequest getter used by SM.
          * @return bool resetRequest.

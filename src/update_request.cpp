@@ -44,10 +44,13 @@ namespace ara { namespace com {
         }
     }
 
-
     bool UpdateRequest::IsResetRequest() const {
         return resetRequest;
     }
+    void UpdateRequest::SetResetRequest(bool newResetRequest) {
+        UpdateRequest::resetRequest = newResetRequest;
+    }
+
     void UpdateRequest::SetResetAccepted(bool isResetAccepted) {
         UpdateRequest::resetAccepted = isResetAccepted;
     }
@@ -76,6 +79,4 @@ namespace ara { namespace com {
 //    void UpdateRequest::SetErrorCode(sm::ErrorType errorCode) {
 //        UpdateRequest::errorCode = errorCode;
 //    }
-
-
 }}

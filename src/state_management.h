@@ -15,13 +15,8 @@ namespace ara { namespace sm {
     class StateManagement {
     public:
         StateManagement();
-
-        void Initialize();
-
         void Work();
-
-        void Exit();
-
+        void Kill();
         com::UpdateRequest myUpdateRequest;
         /** @brief Fills [SWS_SM_00020] */
         com::TriggerOut triggerOut;
@@ -30,6 +25,15 @@ namespace ara { namespace sm {
         com::TriggerInOut triggerInOut;
     private:
         bool killFlag;
+        void Worker();
+        /** @brief List of used FunctionGroups. Fills [SWS_SM_00001].
+        *  @details Normally it would be read from manifest, but we use static configuration here */
+        const FunctionGroupListType functionGroupList { FunctionGroupNameType::sm,
+                                                        FunctionGroupNameType::exec,
+                                                        FunctionGroupNameType::phm,
+                                                        FunctionGroupNameType::diag,
+                                                        FunctionGroupNameType::ucm,
+                                                        FunctionGroupNameType::nm };
     };
 }}
 

@@ -12,9 +12,8 @@ namespace ara { namespace sm {
 
     /** @brief List of SM stateMachine states. Fills [RS_SM_00005]. */
     enum class SMStateType {
-        Start_Engine,
-        Drive,
-        Shutdown
+        Off,
+        On
     };
 
     /** @brief Error type of SM. Fills [SWS_SM_91010]. */
@@ -36,12 +35,16 @@ namespace ara { namespace sm {
 
     /**
      * @brief Fills [SWS_SM_91011]
-     * @details Message to all running Processes in the system to indicate a request for a PowerMode
-                switch.
-     * 'On' - normal operation
-     * 'Off' - persist data preparation for shutdown.
-     * 'Suspend' - prepare for suspend2ram. */
-    typedef std::string PowerModeMsg;
+     * @details Message to all running Processes in the system to indicate a request for a PowerMode switch */
+    struct PowerModeMsg {
+    public:
+        /** @brief 'On' - normal operation */
+        static inline const std::string On = "On";
+        /** @brief 'Off' - persist data preparation for shutdown. */
+        static inline const std::string Off = "Off";
+        /** @brief 'Suspend' - prepare for suspend2ram. */
+        static inline const std::string Suspend = "Suspend";
+    };
 
     /**
      * @brief Fills [SWS_SM_91012]
@@ -60,13 +63,16 @@ namespace ara { namespace sm {
     /**
     * @brief Fills [SWS_SM_91013]
     * @details Message to all Processes(in a SoftwareCluster) to indicate a request to perform
-               Diagnostic SoftReset.
-    * @enum 'SoftReset' - normal operation */
-    typedef std::string DiagnosticResetMsg;
+               Diagnostic SoftReset. */
+    struct DiagnosticResetMsg {
+    public:
+        /** @brief 'SoftReset' - normal operation */
+        static inline const std::string SoftReset = "SoftReset";
+    };
 
     /**
- * @brief Fills [SWS_SM_91014]
- * @details Reply message from Process, which received DiagnosticResetMessage from State Management. */
+    * @brief Fills [SWS_SM_91014]
+    * @details Reply message from Process, which received DiagnosticResetMessage from State Management. */
     enum class DiagnosticResetRespMsg {
         /** reset performed successfully. */
         kDone,
@@ -78,15 +84,44 @@ namespace ara { namespace sm {
         kNotSupported
     };
 
-
-    /** @brief FunctionGroup shortName. Fills [SWS_SM_91018]. */
-    typedef std::string FunctionGroupNameType;
-    /** @brief A list of FunctionGroups. Fills [SWS_SM_91019]. */
-    typedef std::vector<FunctionGroupNameType> FunctionGroupListType;
-
-    /** @brief List of used FunctionGroups. Fills [SWS_SM_00001].
-     *  @details Normally it would be read from manifest, but we use static configuration here */
-    FunctionGroupListType GlobalFunctionGroupList = {"sm", "exec", "phm", "diag", "ucm", "nm"};
+    /** @brief FunctionGroup shortName type. Fills [SWS_SM_91018]. */
+    struct FunctionGroupNameType {
+    public:
+        /** @brief Adaptive Platform Core */
+        static inline const std::string core = "core";
+        /** @brief Communication Management */
+        static inline const std::string com = "com";
+        /** @brief Cryptography */
+        static inline const std::string crypto = "crypto";
+        /** @brief Diagnostics */
+        static inline const std::string diag = "diag";
+        /** @brief Execution management */
+        static inline const std::string exec = "exec";
+        /** @brief Firewall */
+        static inline const std::string fw = "fw";
+        /** @brief Identity and Access Management */
+        static inline const std::string iam = "iam";
+        /** @brief Intrusion Detection System Manager */
+        static inline const std::string idsm = "idsm";
+        /** @brief Log and Trace */
+        static inline const std::string log = "log";
+        /** @brief Network Management */
+        static inline const std::string nm   = "nm";
+        /** @brief Operating System Interface */
+        static inline const std::string na   = "n/a";
+        /** @brief Persistency */
+        static inline const std::string per  = "per";
+        /** @brief Platform Health Management */
+        static inline const std::string phm  = "phm";
+        /** @brief State Management */
+        static inline const std::string sm   = "sm";
+        /** @brief Time Synchronization */
+        static inline const std::string tsync  = "tsync";
+        /** @brief Update and Configuration Management */
+        static inline const std::string ucm  = "ucm";
+    };
+    /** @brief A list of FunctionGroups type. Fills [SWS_SM_91019]. */
+    typedef std::vector<std::string> FunctionGroupListType;
 
 
 }}

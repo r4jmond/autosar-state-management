@@ -3,26 +3,28 @@
 
 namespace ara { namespace sm {
 
-    void StateManagement::Initialize() {
-        std::cout << "Initialization complete" << std::endl;
-    }
-
     void StateManagement::Work() {
         std::cout << "Starting work" << std::endl;
         while (!killFlag) {
-
-            if (myUpdateRequest.IsResetRequest()) {
-                // reset
-            } else {
-                //don't reset??
-            }
+            Worker();
         }
     }
 
-    void StateManagement::Exit() {
-        std::cout << "Exit completed" << std::endl;
+    void StateManagement::Worker() {
+        if (myUpdateRequest.IsResetRequest()) {
+            myUpdateRequest.SetResetRequest(false);
+            myUpdateRequest.SetResetAccepted(true);
+        } else {
+            //don't reset??
+        }
+    }
+
+    void StateManagement::Kill() {
+        killFlag = true;
     }
 
     StateManagement::StateManagement() :
             myUpdateRequest{com::UpdateRequest()}, killFlag{false} {}
+
+
 }}

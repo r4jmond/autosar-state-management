@@ -7,7 +7,7 @@ cmake_minimum_required(VERSION 3.10)
 set(PROJECT_NAME autosar_state_management)
 project(${PROJECT_NAME})
 
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "-Wall")
 set(CMAKE_C_FLAGS "-Wall")
 
