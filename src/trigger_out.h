@@ -1,5 +1,7 @@
 #ifndef AUTOSAR_STATE_MANAGEMENT_TRIGGER_OUT_H
 #define AUTOSAR_STATE_MANAGEMENT_TRIGGER_OUT_H
+/** @file trigger_out.h
+ * @brief Trigger out interface. */
 
 namespace ara { namespace com {
 
