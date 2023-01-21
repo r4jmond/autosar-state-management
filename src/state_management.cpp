@@ -8,12 +8,13 @@ namespace ara { namespace sm {
         while (!killFlag) {
             Worker();
         }
+        std::cout << "Finished work" << std::endl;
     }
 
     void StateManagement::Worker() {
         if (myUpdateRequest.IsResetRequest()) {
-            myUpdateRequest.SetResetRequest(false);
             myUpdateRequest.SetResetAccepted(true);
+            myUpdateRequest.SetResetRequest(false);
         } else {
             //don't reset??
         }
