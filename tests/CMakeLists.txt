@@ -5,8 +5,9 @@ include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 
 add_executable( gTests_all
         tests.cpp
+        sm_tests.h
         test_reset_execution.cpp
-        test_network_handler.cpp)
+        test_network_handler.cpp sm_tests.h)
 
 SET( GTEST_LIBRARIES gtest gtest_main gmock gmock_main )
 target_link_libraries( gTests_all ${GTEST_LIBRARIES} )
