@@ -8,12 +8,10 @@
 namespace ara { namespace exec {
     /** @brief Class StateClient to be used for communication between SM and EM */
     class StateClient {
-    private:
+    public:
         /** @brief Variable to store the result of AUTOSAR Adaptive Platform initial transition to Startup state. */
         bool InitialMachineStateTransitionResult;
     public:
-        /** @brief StateClient constructor. */
-        StateClient();
         /**
         * @brief ComSetState
         * @details Request a state transition for Com FunctionGroup.
