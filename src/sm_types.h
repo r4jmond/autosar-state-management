@@ -32,7 +32,7 @@ namespace ara::sm {
         /** Requested transition is not possible from current StateMachine state. */
         kTransitionNotAllowed             = 11,
         /** Request will not be carried out, because currently recovery is ongoing. */
-        kRecorveryTransitionOngoing       = 12,
+        kRecoveryTransitionOngoing       = 12,
         /** During transition to the requested state an error occurred. */
         kTransitionFailed                 = 13,
         /** The request was replaced by a newer one and therefore it was cancelled. */
@@ -126,10 +126,9 @@ namespace ara::sm {
         /** @brief Update and Configuration Management */
         static inline const std::string ucm  = "ucm";
     };
+    
     /** @brief A list of FunctionGroups type. Fills [SWS_SM_91019]. */
     typedef std::vector<std::string> FunctionGroupListType;
 
-
 }
-
 #endif //AUTOSAR_STATE_MANAGEMENT_SM_TYPES_H
