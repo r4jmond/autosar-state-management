@@ -13,3 +13,4 @@ build
 .idea
 .python-version
 cmake-build-debug
+lib/doxygen-awesome-css
