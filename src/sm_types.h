@@ -35,7 +35,7 @@ namespace ara { namespace sm {
         kRecorveryTransitionOngoing       = 12,
         /** During transition to the requested state an error occurred. */
         kTransitionFailed                 = 13,
-        /** The request was replaced by a newer one and therfore it was cancelled. */
+        /** The request was replaced by a newer one and therefore it was cancelled. */
         kCanceled                         = 14
     };
 
