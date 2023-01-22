@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-namespace ara { namespace sm {
+namespace ara::sm {
 
     /** @brief List of SM stateMachine states. Fills [RS_SM_00005]. */
     enum class SMStateType {
@@ -130,6 +130,6 @@ namespace ara { namespace sm {
     typedef std::vector<std::string> FunctionGroupListType;
 
 
-}}
+}
 
 #endif //AUTOSAR_STATE_MANAGEMENT_SM_TYPES_H
