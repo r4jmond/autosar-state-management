@@ -75,6 +75,21 @@ jobs:
           name: Index-GH-Pages
           path: doc/index.html
 
+      -name: Set proper Doxygen-Awesome version
+        working-directory: lib/doxygen-awesome-css
+        run: git checkout v2.1.0
+
+      -name: Generate doxygen report
+        run: doxygen doxy_config
+
+      -name: Attach doxygen report
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: Doxygen-Report
+          path: doc/doxygen
+
+
   Linters:
     runs-on: ${{ fromJSON('["ubuntu-latest", "self-hosted"]')[github.repository == 'github/docs-internal'] }}
     steps:
@@ -121,6 +136,11 @@ jobs:
         with:
           name: Cppcheck_Report
           path: ./Cppcheck/
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: Doxygen_Report
+          path: ./
 
       - name: Setup Pages
         uses: actions/configure-pages@v2
