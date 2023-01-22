@@ -19,18 +19,24 @@ namespace ara { namespace sm {
     /** @brief Error type of SM. Fills [SWS_SM_91010]. */
     enum class ErrorType {
         /** No error. */
-        kSuccess        = 0,
-        /** Requested operation was rejected due to State Management machines internal state. */
-        kRejected       = 5,
-        /** Verification step of update failed. */
-        kVerifyFailed   = 6,
-        /** Preparation step of update failed. */
-        kPrepareFailed  = 7,
-        /** Rollback step of update failed. */
-        kRollbackFailed = 8,
+        kSuccess                          =  0,
+        /** Requested operation was rejected due to State Management/machines internal state. */
+        kRejected                         =  5,
+        /** Requested operation failed. */
+        kFailed                           =  6,
         /** Request for new session was rejected as only single active
             (update) session is allowed. */
-        kNotAllowedMultipleUpdateSessions = 9
+        kNotAllowedMultipleUpdateSessions =  9,
+        /** The provided value is not mapped to any transition */
+        kInvalidValue                     = 10,
+        /** Requested transition is not possible from current StateMachine state. */
+        kTransitionNotAllowed             = 11,
+        /** Request will not be carried out, because currently recovery is ongoing. */
+        kRecorveryTransitionOngoing       = 12,
+        /** During transition to the requested state an error occurred. */
+        kTransitionFailed                 = 13,
+        /** The request was replaced by a newer one and therfore it was cancelled. */
+        kCanceled                         = 14
     };
 
     /**
