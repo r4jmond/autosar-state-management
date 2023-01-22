@@ -5,7 +5,8 @@
 
 #include "sm_types.h"
 
-namespace ara { namespace com {
+namespace ara::com {
+
     /** @brief Class UpdateRequest to be used by Update and Configuration Management.
      *         Fills [SWS_SM_91016]. */
     class UpdateRequest {
@@ -41,91 +42,93 @@ namespace ara { namespace com {
          * @details Has to be called by Update And Configuration Management after State Management allowed to update.
                     State Management will decline this request when RequestUpdateSession was not called before
                     successfully.
-         * @param[in] functionGroupList - The list of FunctionGroups to be prepared to be updated.
+         * @param [in] updateFunctionGroupList - The list of FunctionGroups to be prepared to be updated.
          * @return error code
          */
-        sm::ErrorType PrepareUpdate(sm::FunctionGroupListType functionGroupList);
+        sm::ErrorType PrepareUpdate(sm::FunctionGroupListType const &functionGroupList);
         /**
         * @brief VerifyUpdate
         * @details Has to be called by Update And Configuration Management after State Management allowed to update
                    and the update preparation has been done. State Management will decline this request when
                    PrepareUpdate was not called before successfully.
-        * @param[in] functionGroupList - The list of FunctionGroups within the SoftwareCluster to be verified.
+        * @param [in] functionGroupList - The list of FunctionGroups within the SoftwareCluster to be verified.
         * @return error code
         */
-        sm::ErrorType VerifyUpdate() {/*todo implement*/ return sm::ErrorType::kSuccess;}
+        sm::ErrorType VerifyUpdate(sm::FunctionGroupListType const &functionGroupList);
         /**
         * @brief PrepareRollback
         * @details Has to be called by Update And Configuration Management after State Management allowed to update.
-        * @param[in] functionGroupList - The list of FunctionGroups to be prepared to roll back.
+        * @param [in] functionGroupList - The list of FunctionGroups to be prepared to roll back.
         * @return error code
         */
-        sm::ErrorType PrepareRollback() {/*todo implement*/ return sm::ErrorType::kSuccess;}
-
+        sm::ErrorType PrepareRollback(sm::FunctionGroupListType const &functionGroupList);
+        /** @brief Type of request sent to SM */
+        enum class RequestType {
+            /** Reset Machine */
+            kResetMachine,
+            /** Stop Update Session */
+            kStopUpdateSession,
+            /** Request Update Session */
+            kRequestUpdateSession,
+            /** Prepare Update */
+            kPrepareUpdate,
+            /** Verify Update */
+            kVerifyUpdate,
+            /** Prepare Rollback */
+            kPrepareRollback
+        };
+        /** @brief RequestMsg sent to SM */
+        struct RequestMsg {
+            /** status of request (true - active) */
+            bool status;
+            /** type of request */
+            RequestType type;
+        };
     private:
-        bool resetRequest;
+        RequestMsg requestMsg;
+        /** @brief Sends request to SM, waits for the response and returns it.
+         *  @param [in] requestType - type of request sent to SM
+         *  @return response from the SM */
+        ara::sm::ErrorType SendRequest(RequestType requestType);
     public:
-        /** @brief resetRequest setter used by SM. */
-        void SetResetRequest(bool newResetRequest);
-        /**
-         * @brief resetRequest getter used by SM.
-         * @return bool resetRequest.
-         */
-        bool IsResetRequest() const;
+        /** @brief smRequest getter used by SM
+         * @return request sent to the SM */
+        RequestMsg &GetRequestMsg();
 
     private:
-        bool resetAccepted;
+        /** @brief Contains last request return value. Set by SM in SendResponse. */
+        ara::sm::ErrorType updateStatus;
     public:
-        /** @brief resetAccepted setter used by SM. */
-        void SetResetAccepted(bool isResetAccepted);
+        /** @brief updateStatus getter used by the SM.
+         * @return updateStatus */
+        [[nodiscard]] sm::ErrorType GetUpdateStatus() const;
 
-    private:
-        /** @brief updateRequest will be set for requesting SM action.
-         *         SM will interpret it based on update state.
-         */
-        bool updateRequest;
     public:
-        /**
-         * @brief updateRequest getter used by SM.
-         * @return bool updateRequest.
-         */
-        bool IsUpdateRequest() const;
-        /** @brief updateRequest setter used by SM. */
-        void SetUpdateRequest(bool newUpdateRequest);
+        /** @brief SM should respond to Update Request using this function.
+         *         Sets requestMsg.status flag to false, and sets updateStatus.
+         *  @param [in] newUpdateStatus - return status of the Update Request. */
+        void SendResponse(sm::ErrorType newUpdateStatus);
 
     private:
+        /** @brief Update Session status set by SM */
         bool updateSession;
     public:
-        /**
-         * @brief updateSession getter used by SM.
-         * @return bool updateSession.
-         */
-        bool IsUpdateSession() const;
+        /** @brief updateSession getter used by SM.
+         *  @return bool updateSession. */
+        [[nodiscard]] bool IsUpdateSession() const;
         /** @brief updateSession setter used by SM. */
-        void SetUpdateSession(bool newUpdateSession);
-
-    private:
-        bool updateAccepted;
-    public:
-        /** @brief updateAccepted setter used by SM. */
-        void SetUpdateAccepted(bool isUpdateAccepted);
+        void SetUpdateSession(bool updateSession);
 
     private:
         /** @brief list being used by SM and set by PrepareUpdate/VerifyUpdate/PrepareRollback functions */
-        ara::sm::FunctionGroupListType functionGroupList;
+        ara::sm::FunctionGroupListType functionGroupListToSM;
     public:
         /**
          * @brief functionGroupList getter used by SM.
          * @return sm::FunctionGroupListType functionGroupList
          */
-        const ara::sm::FunctionGroupListType &GetFunctionGroupList() const;
-
-    private:
-        ara::sm::ErrorType errorCode;
-    public:
-        /** @brief errorCode setter used by SM. */
-        void SetErrorCode(ara::sm::ErrorType errorCode);
+        [[nodiscard]] const ara::sm::FunctionGroupListType &GetFunctionGroupList() const;
 
     };
-}}
+}
 #endif //AUTOSAR_STATE_MANAGEMENT_UPDATE_REQUEST_H
