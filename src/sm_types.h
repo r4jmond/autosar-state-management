@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-namespace ara { namespace sm {
+namespace ara::sm {
 
     /** @brief List of SM stateMachine states. Fills [RS_SM_00005]. */
     enum class SMStateType {
@@ -19,18 +19,24 @@ namespace ara { namespace sm {
     /** @brief Error type of SM. Fills [SWS_SM_91010]. */
     enum class ErrorType {
         /** No error. */
-        kSuccess        = 0,
-        /** Requested operation was rejected due to State Management machines internal state. */
-        kRejected       = 5,
-        /** Verification step of update failed. */
-        kVerifyFailed   = 6,
-        /** Preparation step of update failed. */
-        kPrepareFailed  = 7,
-        /** Rollback step of update failed. */
-        kRollbackFailed = 8,
+        kSuccess                          =  0,
+        /** Requested operation was rejected due to State Management/machines internal state. */
+        kRejected                         =  5,
+        /** Requested operation failed. */
+        kFailed                           =  6,
         /** Request for new session was rejected as only single active
             (update) session is allowed. */
-        kNotAllowedMultipleUpdateSessions = 9
+        kNotAllowedMultipleUpdateSessions =  9,
+        /** The provided value is not mapped to any transition */
+        kInvalidValue                     = 10,
+        /** Requested transition is not possible from current StateMachine state. */
+        kTransitionNotAllowed             = 11,
+        /** Request will not be carried out, because currently recovery is ongoing. */
+        kRecoveryTransitionOngoing       = 12,
+        /** During transition to the requested state an error occurred. */
+        kTransitionFailed                 = 13,
+        /** The request was replaced by a newer one and therefore it was cancelled. */
+        kCanceled                         = 14
     };
 
     /**
@@ -120,6 +126,7 @@ namespace ara { namespace sm {
         /** @brief Update and Configuration Management */
         static inline const std::string ucm  = "ucm";
     };
+
     /** @brief A list of FunctionGroups type. Fills [SWS_SM_91019]. */
     typedef std::vector<std::string> FunctionGroupListType;
 
@@ -138,6 +145,6 @@ namespace ara { namespace sm {
         /** function group restart. */
         Restart
     };
-}}
+}
 
 #endif //AUTOSAR_STATE_MANAGEMENT_SM_TYPES_H

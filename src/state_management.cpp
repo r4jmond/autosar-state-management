@@ -3,29 +3,27 @@
 
 namespace ara { namespace sm {
 
-    void StateManagement::Initialize() {
-        std::cout << "Initialization complete" << std::endl;
-    }
-
     void StateManagement::Work() {
         std::cout << "Starting work" << std::endl;
         while (!killFlag) {
-            if (myUpdateRequest.isOngoingUpdate()) {
-                std::cout << "Updating in progress" << std::endl;
-            }
+            Worker();
+        }
+        std::cout << "Finished work" << std::endl;
+    }
 
-            if (myUpdateRequest.isResetRequest()) {
-                // reset
-            } else {
-                //don't reset??
-            }
+    void StateManagement::Worker() {
+        if (myUpdateRequest.IsResetRequest()) {
+            myUpdateRequest.SetResetAccepted(true);
+            myUpdateRequest.SetResetRequest(false);
+        } else {
+            //don't reset??
         }
     }
 
-    void StateManagement::Exit() {
-        std::cout << "Exit completed" << std::endl;
+    void StateManagement::Kill() {
+        killFlag = true;
     }
 
     StateManagement::StateManagement() :
-            myUpdateRequest{com::UpdateRequest()}, killFlag{false}, myNetworkHandle{com::NetworkHandle()} {}
+        myUpdateRequest{com::UpdateRequest()}, myNetworkHandle{com::NetworkHandle()}, killFlag{false} {}
 }}
