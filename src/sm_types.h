@@ -130,5 +130,15 @@ namespace ara::sm {
     /** @brief A list of FunctionGroups type. Fills [SWS_SM_91019]. */
     typedef std::vector<std::string> FunctionGroupListType;
 
+    /**
+    * @brief Fills [SWS_SM_91007]
+    * @details Type used for triggering SM state change */
+    class TriggerInMessageType {
+    public:
+        /** @brief To inform SM about incoming trigger */
+        bool isNewTrigger = false;
+        /** @brief Desired SM state after trigger */
+        SMStateType desiredSMState = SMStateType::Off;
+    };
 }
 #endif //AUTOSAR_STATE_MANAGEMENT_SM_TYPES_H

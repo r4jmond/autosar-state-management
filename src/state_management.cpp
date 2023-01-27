@@ -25,5 +25,8 @@ namespace ara { namespace sm {
     }
 
     StateManagement::StateManagement() :
-        myUpdateRequest{com::UpdateRequest()}, myNetworkHandle{com::NetworkHandle()}, killFlag{false} {}
+        myUpdateRequest{com::UpdateRequest()},
+        myNetworkHandle{com::NetworkHandle()},
+        triggerIn{com::TriggerIn()},
+        killFlag{false} {}
 }}
