@@ -29,5 +29,6 @@ namespace ara { namespace sm {
         myNetworkHandle{com::NetworkHandle()},
         triggerOut{com::TriggerOut()},
         triggerIn{com::TriggerIn()},
+        triggerInOut{com::TriggerInOut()},
         killFlag{false} {}
 }}
