@@ -140,5 +140,16 @@ namespace ara::sm {
         /** @brief Desired SM state after trigger */
         SMStateType desiredSMState = SMStateType::Off;
     };
+
+    /**
+    * @brief Fills [SWS_SM_91009]
+    * @details Type used for triggering SM state change */
+    class TriggerInOutNotifierType {
+    public:
+        /** @brief To inform applications about state transition */
+        sm::ErrorType result = ErrorType::kFailed;
+        /** @brief SM state after processing trigger */
+        SMStateType currentSMState = SMStateType::Off;
+    };
 }
 #endif //AUTOSAR_STATE_MANAGEMENT_SM_TYPES_H

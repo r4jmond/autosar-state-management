@@ -1,20 +1,26 @@
 #include "trigger_in_out.h"
 
-namespace ara { namespace com {
+namespace ara::com {
 
-    bool TriggerInOut::IsNotifier() const {
+    sm::TriggerInOutNotifierType TriggerInOut::GetTransitionResult() const {
         return notifier;
     }
 
-    void TriggerInOut::SetNotifier(bool newNotifier) {
-        TriggerInOut::notifier = newNotifier;
+    void TriggerInOut::SetSMState(sm::SMStateType desiredSMState) {
+        trigger = desiredSMState;
+        isTrigger = true;
+    }
+
+    void TriggerInOut::DiscardTrigger() {
+        isTrigger = false;
+    }
+
+    void TriggerInOut::SetTransitionResult(sm::ErrorType result, sm::SMStateType currentSMState) {
+        notifier.result = result;
+        notifier.currentSMState = currentSMState;
     }
 
     bool TriggerInOut::IsTrigger() const {
-        return trigger;
+        return isTrigger;
     }
-
-    void TriggerInOut::SetTrigger(bool newTrigger) {
-        TriggerInOut::trigger = newTrigger;
-    }
-}}
+}
