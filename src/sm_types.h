@@ -130,6 +130,29 @@ namespace ara::sm {
     /** @brief A list of FunctionGroups type. Fills [SWS_SM_91019]. */
     typedef std::vector<std::string> FunctionGroupListType;
 
+
+    /**
+    * @brief Fills [SWS_SM_91009]
+    * @details Type used for triggering SM state change */
+    class TriggerInOutNotifierType {
+    public:
+        /** @brief To inform applications about state transition */
+        sm::ErrorType result = ErrorType::kFailed;
+        /** @brief SM state after processing trigger */
+        SMStateType currentSMState = SMStateType::Off;
+    };
+
+    /**
+    * @brief Fills [SWS_SM_91007]
+    * @details Type used for triggering SM state change */
+    class TriggerType {
+    public:
+        /** @brief To inform SM about incoming trigger */
+        bool isNewTrigger = false;
+        /** @brief Desired SM state after trigger */
+        SMStateType desiredSMState = SMStateType::Off;
+    };
+
     /**
     * @brief Fills []
     * @details States of Adaptive Platform Function Groups */

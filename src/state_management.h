@@ -11,12 +11,12 @@
 #include "network_handle.h"
 #include "state_client.h"
 
-namespace ara { namespace sm {
+namespace ara::sm {
     /** @brief Class StateManagement to be used by Update and Configuration Management.
      *         Fills [SWS_SM_XXXXX]. */
     class StateManagement {
     public:
-        StateManagement(exec::StateClient* sc);
+        explicit StateManagement(exec::StateClient* sc);
         void Work();
         void Kill();
         com::UpdateRequest myUpdateRequest;
@@ -40,6 +40,6 @@ namespace ara { namespace sm {
                                                         FunctionGroupNameType::ucm,
                                                         FunctionGroupNameType::nm };
     };
-}}
+}
 
 #endif //AUTOSAR_STATE_MANAGEMENT_STATE_MANAGEMENT_H
