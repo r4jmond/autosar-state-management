@@ -10,8 +10,8 @@ namespace ara::com {
 /** @brief Fills [SWS_SM_91007] */
     class TriggerIn {
     public:
-        bool IsTrigger() const;
-        sm::SMStateType GetDesiredState() const;
+        [[nodiscard]] bool IsTrigger() const;
+        [[nodiscard]] sm::SMStateType GetDesiredState() const;
 
         void SetTrigger(sm::SMStateType);
         void DiscardTrigger();

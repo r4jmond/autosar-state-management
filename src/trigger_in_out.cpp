@@ -23,4 +23,8 @@ namespace ara::com {
     bool TriggerInOut::IsTrigger() const {
         return trigger.isNewTrigger;
     }
+
+    sm::SMStateType TriggerInOut::GetDesiredState() const {
+        return trigger.desiredSMState;
+    }
 }

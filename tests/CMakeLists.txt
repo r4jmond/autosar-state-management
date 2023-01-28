@@ -8,6 +8,8 @@ add_executable( gTests_all
         sm_tests.h
         test_reset_execution.cpp
         test_network_handler.cpp
+        test_state_client.cpp
+        test_network_handler.cpp
         test_trigger_in.cpp
         test_trigger_out.cpp
         test_trigger_in_out.cpp)

@@ -1,7 +1,7 @@
 #include "state_management.h"
 #include <iostream>
 
-namespace ara { namespace sm {
+namespace ara::sm {
 
     void StateManagement::Work() {
         std::cout << "Starting work" << std::endl;
@@ -19,21 +19,50 @@ namespace ara { namespace sm {
             //don't reset??
         }
 
-        triggerOut.SetNotifier(ara::sm::SMStateType::On);
-        triggerInOut.SetNotifier(ara::sm::ErrorType::kSuccess, ara::sm::SMStateType::On);
-        triggerInOut.DiscardTrigger();
-        triggerIn.DiscardTrigger();
+        if (triggerIn.IsTrigger()) {
+            SMStateType requestedSMState = triggerInOut.GetDesiredState();
+            FunctionGroupStateType newSMState = FunctionGroupStateType::Shutdown;
+            if (requestedSMState == SMStateType::On) {
+                newSMState = FunctionGroupStateType::On;
+            } else if (requestedSMState == SMStateType::Off) {
+                newSMState = FunctionGroupStateType::Off;
+            }
+            stateClient->SmSetState(newSMState);
+            triggerIn.DiscardTrigger();
+        }
+        else if (triggerInOut.IsTrigger()) {
+            SMStateType requestedSMState = triggerInOut.GetDesiredState();
+            FunctionGroupStateType newSMState = FunctionGroupStateType::Shutdown;
+            if (requestedSMState == SMStateType::On) {
+                newSMState = FunctionGroupStateType::On;
+            } else if (requestedSMState == SMStateType::Off) {
+                newSMState = FunctionGroupStateType::Off;
+            }
+
+            stateClient->SmSetState(newSMState);
+            if (stateClient != nullptr) {
+                internalState = stateClient->requestedSMState;
+            }
+            triggerInOut.SetNotifier(ara::sm::ErrorType::kSuccess, internalState);
+            triggerInOut.DiscardTrigger();
+        }
+
+        if (stateClient != nullptr) {
+            internalState = stateClient->requestedSMState;
+        }
+        triggerOut.SetNotifier(internalState);
     }
 
     void StateManagement::Kill() {
         killFlag = true;
     }
 
-    StateManagement::StateManagement() :
+    StateManagement::StateManagement(exec::StateClient* sc) :
         myUpdateRequest{com::UpdateRequest()},
         myNetworkHandle{com::NetworkHandle()},
         triggerOut{com::TriggerOut()},
         triggerIn{com::TriggerIn()},
         triggerInOut{com::TriggerInOut()},
+        stateClient{sc},
         killFlag{false} {}
-}}
+}

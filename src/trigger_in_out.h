@@ -10,11 +10,12 @@ namespace ara::com {
     /** @brief Fills [SWS_SM_91009] */
     class TriggerInOut {
     public:
-        sm::TriggerInOutNotifierType GetNotifier() const;
+        [[nodiscard]] sm::TriggerInOutNotifierType GetNotifier() const;
         void SetTrigger(sm::SMStateType);
 
         void SetNotifier(sm::ErrorType result, sm::SMStateType currentSMState);
-        bool IsTrigger() const;
+        [[nodiscard]] bool IsTrigger() const;
+        [[nodiscard]] sm::SMStateType GetDesiredState() const;
         void DiscardTrigger();
 
     private:
