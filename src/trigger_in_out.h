@@ -13,7 +13,7 @@ namespace ara::com {
         sm::TriggerInOutNotifierType GetNotifier() const;
         void SetTrigger(sm::SMStateType);
 
-        void SetTransitionResult(sm::ErrorType result, sm::SMStateType currentSMState);
+        void SetNotifier(sm::ErrorType result, sm::SMStateType currentSMState);
         bool IsTrigger() const;
         void DiscardTrigger();
 

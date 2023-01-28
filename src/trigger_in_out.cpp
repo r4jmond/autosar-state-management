@@ -15,7 +15,7 @@ namespace ara::com {
         trigger.isNewTrigger = false;
     }
 
-    void TriggerInOut::SetTransitionResult(sm::ErrorType result, sm::SMStateType currentSMState) {
+    void TriggerInOut::SetNotifier(sm::ErrorType result, sm::SMStateType currentSMState) {
         notifier.result = result;
         notifier.currentSMState = currentSMState;
     }

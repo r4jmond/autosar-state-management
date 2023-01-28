@@ -20,7 +20,7 @@ namespace ara { namespace sm {
         }
 
         triggerOut.SetNotifier(ara::sm::SMStateType::On);
-        triggerInOut.SetTransitionResult(ara::sm::ErrorType::kSuccess, ara::sm::SMStateType::On);
+        triggerInOut.SetNotifier(ara::sm::ErrorType::kSuccess, ara::sm::SMStateType::On);
         triggerInOut.DiscardTrigger();
         triggerIn.DiscardTrigger();
     }
