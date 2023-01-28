@@ -28,7 +28,7 @@ namespace ara { namespace sm {
         killFlag = true;
     }
 
-    StateManagement::StateManagement(exec::StateClient * sc) :
+    StateManagement::StateManagement(exec::StateClient* sc) :
         myUpdateRequest{com::UpdateRequest()},
         myNetworkHandle{com::NetworkHandle()},
         stateClient{sc},

@@ -16,7 +16,7 @@ namespace ara { namespace sm {
      *         Fills [SWS_SM_XXXXX]. */
     class StateManagement {
     public:
-        StateManagement(exec::StateClient * sc);
+        StateManagement(exec::StateClient* sc);
         void Work();
         void Kill();
         com::UpdateRequest myUpdateRequest;
@@ -27,7 +27,7 @@ namespace ara { namespace sm {
         com::TriggerIn triggerIn;
         com::TriggerInOut triggerInOut;
         SMStateType internalState = SMStateType::Off;
-        exec::StateClient * stateClient = nullptr;
+        exec::StateClient* stateClient = nullptr;
     private:
         bool killFlag;
         void Worker();
