@@ -1,5 +1,4 @@
-/** @file tests_update_request.cpp# Use command below for generating html report
-# Build target gTests_coverage to generate html report
+/** @file tests_update_request.cpp
  * @brief Tests of the Update Request service interface.
  * @details Described in Autosar_SWS_StateManagement chapter 7.5. */
 
