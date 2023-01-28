@@ -17,9 +17,12 @@
 class smTests : public testing::Test {
 protected:
     ara::exec::StateClient mySC;
+    ara::exec::ExecutionClient myEC;
     ara::sm::StateManagement mySM;
     std::thread smThread;
-    smTests() : mySC{ara::exec::StateClient()}, mySM{ara::sm::StateManagement(&mySC)} {
+    smTests() : mySC{ara::exec::StateClient()},
+                myEC{ara::exec::ExecutionClient()},
+                mySM{ara::sm::StateManagement(&mySC, &myEC)} {
         smThread = std::thread(&ara::sm::StateManagement::Work, &mySM);
     }
     ~smTests() override {

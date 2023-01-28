@@ -50,6 +50,9 @@ namespace ara::sm {
         if (stateClient != nullptr) {
             internalState = stateClient->requestedSMState;
         }
+        if (executionClient != nullptr) {
+            executionClient->ReportApplicationState(internalState);
+        }
         triggerOut.SetNotifier(internalState);
     }
 
@@ -57,12 +60,13 @@ namespace ara::sm {
         killFlag = true;
     }
 
-    StateManagement::StateManagement(exec::StateClient* sc) :
+    StateManagement::StateManagement(exec::StateClient* sc, exec::ExecutionClient* ec) :
         myUpdateRequest{com::UpdateRequest()},
         myNetworkHandle{com::NetworkHandle()},
         triggerOut{com::TriggerOut()},
         triggerIn{com::TriggerIn()},
         triggerInOut{com::TriggerInOut()},
         stateClient{sc},
+        executionClient{ec},
         killFlag{false} {}
 }
