@@ -5,13 +5,29 @@
 
 #include "sm_types.h"
 
-namespace ara { namespace exec {
+namespace ara::exec {
     /** @brief Class StateClient to be used for communication between SM and EM */
     class StateClient {
     public:
         /** @brief Variable to store the result of AUTOSAR Adaptive Platform initial transition to Startup state. */
-        bool InitialMachineStateTransitionResult;
+        bool initialMachineStateTransitionResult;
+
+        /** @brief Variable to store requested SM state after calling SMSetState. */
+        ara::sm::SMStateType requestedSMState;
     public:
+        /**
+        * @brief GetInitialMachineStateTransitionResult
+        * @details Retrieve the result of AUTOSAR Adaptive Platform initial transition to Startup state.
+        */
+        void GetInitialMachineStateTransitionResult();
+        /**
+        * @brief undefinedStateCallback
+        * @details Gives an information whether desired state is valid.
+        */
+        void undefinedStateCallback();
+
+        // methods for SM
+
         /**
         * @brief CoreSetState
         * @details Request a state transition for Core FunctionGroup.
@@ -108,13 +124,7 @@ namespace ara { namespace exec {
         * @param[in] FunctionGroupStateType - FunctionGroupState to be set
         */
         void UcmSetState(sm::FunctionGroupStateType);
-    protected:
-        /**
-        * @brief GetInitialMachineStateTransitionResult
-        * @details Retrieve the result of AUTOSAR Adaptive Platform initial transition to Startup state.
-        */
-        void GetInitialMachineStateTransitionResult();
     };
-}}
+}
 
 #endif //AUTOSAR_STATE_MANAGEMENT_STATE_CLIENT_H

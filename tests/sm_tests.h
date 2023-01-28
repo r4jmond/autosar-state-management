@@ -6,6 +6,7 @@
 
 #include <thread>
 #include "state_management.h"
+#include "state_client.h"
 #include "sm_types.h"
 #include "gtest/gtest.h"
 
@@ -15,9 +16,10 @@
  */
 class smTests : public testing::Test {
 protected:
+    ara::exec::StateClient mySC;
     ara::sm::StateManagement mySM;
     std::thread smThread;
-    smTests(){
+    smTests() : mySC{ara::exec::StateClient()}, mySM{ara::sm::StateManagement(&mySC)} {
         smThread = std::thread(&ara::sm::StateManagement::Work, &mySM);
     }
     ~smTests() override {
