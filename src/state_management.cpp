@@ -18,12 +18,19 @@ namespace ara { namespace sm {
         } else {
             //don't reset??
         }
+
+        if (stateClient != nullptr) {
+            internalState = stateClient->requestedSMState;
+        }
     }
 
     void StateManagement::Kill() {
         killFlag = true;
     }
 
-    StateManagement::StateManagement() :
-        myUpdateRequest{com::UpdateRequest()}, myNetworkHandle{com::NetworkHandle()}, killFlag{false} {}
+    StateManagement::StateManagement(exec::StateClient* sc) :
+        myUpdateRequest{com::UpdateRequest()},
+        myNetworkHandle{com::NetworkHandle()},
+        stateClient{sc},
+        killFlag{false} {}
 }}

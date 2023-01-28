@@ -126,9 +126,25 @@ namespace ara::sm {
         /** @brief Update and Configuration Management */
         static inline const std::string ucm  = "ucm";
     };
-    
+
     /** @brief A list of FunctionGroups type. Fills [SWS_SM_91019]. */
     typedef std::vector<std::string> FunctionGroupListType;
 
+    /**
+    * @brief Fills []
+    * @details States of Adaptive Platform Function Groups */
+    enum class FunctionGroupStateType {
+        /** function group switched off. */
+        Off,
+        /** function group going on. */
+        Startup,
+        /** function group working. */
+        On,
+        /** function group going off. */
+        Shutdown,
+        /** function group restart. */
+        Restart
+    };
 }
+
 #endif //AUTOSAR_STATE_MANAGEMENT_SM_TYPES_H
