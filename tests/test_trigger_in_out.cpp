@@ -8,7 +8,8 @@ TEST_F(smTests, testInternalStateInfluenceAndPropagation) {
     EXPECT_TRUE(mySM.triggerInOut.IsTrigger());
 
     // let changes to be applied
-    sleep(1);
+    using namespace std::chrono_literals;
+    std::this_thread::sleep_for(500ms);
 
     ara::sm::TriggerInOutNotifierType executionResult = mySM.triggerInOut.GetNotifier();
     EXPECT_EQ(executionResult.currentSMState, ara::sm::SMStateType::On);

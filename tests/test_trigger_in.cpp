@@ -6,7 +6,8 @@ TEST_F(smTests, testInternalStateInfluence) {
     EXPECT_EQ(mySM.triggerIn.GetDesiredState(), ara::sm::SMStateType::Off);
     EXPECT_TRUE(mySM.triggerIn.IsTrigger());
     // let changes to be applied
-    sleep(1);
+    using namespace std::chrono_literals;
+    std::this_thread::sleep_for(500ms);
     EXPECT_FALSE(mySM.triggerIn.IsTrigger());
 }
 
