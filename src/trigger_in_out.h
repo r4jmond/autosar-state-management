@@ -19,9 +19,7 @@ namespace ara::com {
 
     private:
         sm::TriggerInOutNotifierType notifier;
-        sm::SMStateType trigger;
-
-        bool isTrigger = false;
+        sm::TriggerType trigger;
     };
 }
 #endif //AUTOSAR_STATE_MANAGEMENT_TRIGGER_IN_OUT_H

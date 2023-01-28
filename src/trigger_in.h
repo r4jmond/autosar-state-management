@@ -17,7 +17,7 @@ namespace ara::com {
         void DiscardTrigger();
 
     private:
-        sm::TriggerInMessageType trigger;
+        sm::TriggerType trigger;
     };
 }
 #endif //AUTOSAR_STATE_MANAGEMENT_TRIGGER_IN_H

@@ -145,7 +145,7 @@ namespace ara::sm {
     /**
     * @brief Fills [SWS_SM_91007]
     * @details Type used for triggering SM state change */
-    class TriggerInMessageType {
+    class TriggerType {
     public:
         /** @brief To inform SM about incoming trigger */
         bool isNewTrigger = false;

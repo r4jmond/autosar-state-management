@@ -7,12 +7,12 @@ namespace ara::com {
     }
 
     void TriggerInOut::SetTrigger(sm::SMStateType desiredSMState) {
-        trigger = desiredSMState;
-        isTrigger = true;
+        trigger.desiredSMState = desiredSMState;
+        trigger.isNewTrigger = true;
     }
 
     void TriggerInOut::DiscardTrigger() {
-        isTrigger = false;
+        trigger.isNewTrigger = false;
     }
 
     void TriggerInOut::SetTransitionResult(sm::ErrorType result, sm::SMStateType currentSMState) {
@@ -21,6 +21,6 @@ namespace ara::com {
     }
 
     bool TriggerInOut::IsTrigger() const {
-        return isTrigger;
+        return trigger.isNewTrigger;
     }
 }
