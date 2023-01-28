@@ -2,11 +2,11 @@
 
 namespace ara::com {
 
-    sm::TriggerInOutNotifierType TriggerInOut::GetTransitionResult() const {
+    sm::TriggerInOutNotifierType TriggerInOut::GetNotifier() const {
         return notifier;
     }
 
-    void TriggerInOut::SetSMState(sm::SMStateType desiredSMState) {
+    void TriggerInOut::SetTrigger(sm::SMStateType desiredSMState) {
         trigger = desiredSMState;
         isTrigger = true;
     }

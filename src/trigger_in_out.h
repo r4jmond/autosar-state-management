@@ -10,10 +10,10 @@ namespace ara::com {
     /** @brief Fills [SWS_SM_91009] */
     class TriggerInOut {
     public:
-        sm::TriggerInOutNotifierType GetTransitionResult() const;
-        void SetSMState(sm::SMStateType);
+        sm::TriggerInOutNotifierType GetNotifier() const;
+        void SetTrigger(sm::SMStateType);
 
-        void SetTransitionResult(sm::ErrorType, sm::SMStateType);
+        void SetTransitionResult(sm::ErrorType result, sm::SMStateType currentSMState);
         bool IsTrigger() const;
         void DiscardTrigger();
 
@@ -21,7 +21,6 @@ namespace ara::com {
         sm::TriggerInOutNotifierType notifier;
         sm::SMStateType trigger;
 
-        sm::ErrorType transitionResult;
         bool isTrigger = false;
     };
 }

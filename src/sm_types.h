@@ -141,5 +141,16 @@ namespace ara::sm {
         /** @brief SM state after processing trigger */
         SMStateType currentSMState = SMStateType::Off;
     };
+
+    /**
+    * @brief Fills [SWS_SM_91007]
+    * @details Type used for triggering SM state change */
+    class TriggerInMessageType {
+    public:
+        /** @brief To inform SM about incoming trigger */
+        bool isNewTrigger = false;
+        /** @brief Desired SM state after trigger */
+        SMStateType desiredSMState = SMStateType::Off;
+    };
 }
 #endif //AUTOSAR_STATE_MANAGEMENT_SM_TYPES_H

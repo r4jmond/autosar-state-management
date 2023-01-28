@@ -3,19 +3,19 @@
 namespace ara::com {
 
     void TriggerIn::SetTrigger(sm::SMStateType newTrigger) {
-        trigger = newTrigger;
-        isTrigger = true;
+        trigger.desiredSMState = newTrigger;
+        trigger.isNewTrigger = true;
     }
 
     bool TriggerIn::IsTrigger() const {
-        return isTrigger;
+        return trigger.isNewTrigger;
     }
 
     void TriggerIn::DiscardTrigger() {
-        isTrigger = false;
+        trigger.isNewTrigger = false;
     }
 
     sm::SMStateType TriggerIn::GetDesiredState() const {
-        return trigger;
+        return trigger.desiredSMState;
     }
 }

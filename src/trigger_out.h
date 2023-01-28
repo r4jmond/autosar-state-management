@@ -10,7 +10,7 @@ namespace ara::com {
 /** @brief Fills [SWS_SM_91008] */
     class TriggerOut {
     public:
-        sm::SMStateType GetSMState() const;
+        sm::SMStateType GetNotifier() const;
 
         void SetNotifier(sm::SMStateType);
 

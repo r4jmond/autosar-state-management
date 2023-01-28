@@ -18,6 +18,11 @@ namespace ara { namespace sm {
         } else {
             //don't reset??
         }
+
+        triggerOut.SetNotifier(ara::sm::SMStateType::On);
+        triggerInOut.SetTransitionResult(ara::sm::ErrorType::kSuccess, ara::sm::SMStateType::On);
+        triggerInOut.DiscardTrigger();
+        triggerIn.DiscardTrigger();
     }
 
     void StateManagement::Kill() {

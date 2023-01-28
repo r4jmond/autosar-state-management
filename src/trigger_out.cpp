@@ -2,7 +2,7 @@
 
 namespace ara::com {
 
-    sm::SMStateType TriggerOut::GetSMState() const {
+    sm::SMStateType TriggerOut::GetNotifier() const {
         return notifier;
     }
 
