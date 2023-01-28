@@ -37,7 +37,8 @@ TEST_F(smTests, testSMSetStateOn)
     EXPECT_EQ(mySM.internalState, ara::sm::SMStateType::Off);
     mySM.stateClient->SmSetState(ara::sm::FunctionGroupStateType::On);
     // let changes to be applied
-    sleep(1);
+    using namespace std::chrono_literals;
+    std::this_thread::sleep_for(500ms);
     EXPECT_EQ(mySM.internalState, ara::sm::SMStateType::On);
 }
 
@@ -45,7 +46,8 @@ TEST_F(smTests, testSMSetStateOff)
 {
     mySM.stateClient->SmSetState(ara::sm::FunctionGroupStateType::Off);
     // let changes to be applied
-    sleep(1);
+    using namespace std::chrono_literals;
+    std::this_thread::sleep_for(500ms);
     EXPECT_EQ(mySM.internalState, ara::sm::SMStateType::Off);
 }
 
@@ -54,6 +56,7 @@ TEST_F(smTests, testSMSetStateUndefined)
     EXPECT_EQ(mySM.internalState, ara::sm::SMStateType::Off);
     mySM.stateClient->SmSetState(ara::sm::FunctionGroupStateType::Startup);
     // let changes to be applied
-    sleep(1);
+    using namespace std::chrono_literals;
+    std::this_thread::sleep_for(500ms);
     EXPECT_EQ(mySM.internalState, ara::sm::SMStateType::Off);
 }
