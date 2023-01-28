@@ -1,4 +1,4 @@
-#ifndef AUTOSAR_STATEpdateStatus () cons_MANAGEMENT_CONTAINS_H
+#ifndef AUTOSAR_STATE_MANAGEMENT_CONTAINS_H
 #define AUTOSAR_STATE_MANAGEMENT_CONTAINS_H
 /** @file contains.h
  * @brief Contains function for checking whether vector contains given element. */

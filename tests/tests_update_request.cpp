@@ -230,7 +230,7 @@ TEST_F(smTests, testPrepareRollback)
     EXPECT_EQ(errorCode, ara::sm::ErrorType::kRejected);
 
     /** @test PrepareRollback test */
-    /** @test Send Prepare update request with eroneous data */
+    /** @test Send Prepare update request with erroneous data */
     ara::sm::FunctionGroupListType erroneousFGList {
         ara::sm::FunctionGroupNameType::log
     };
