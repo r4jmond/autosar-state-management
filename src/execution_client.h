@@ -12,16 +12,8 @@ namespace ara::exec {
         * @brief ReportApplicationState
         * @details Provides functionality for a Process to report its execution state to Execution Management
         */
-        void ReportApplicationState(sm::SMStateType state);
-        /**
-        * @brief GetApplicationState
-        * @details Gives EM possibility to read internal state, reported by Process
-        * @return Application's internal state
-        */
-        sm::SMStateType GetApplicationState();
-    private:
-        /** @brief Variable to store Application's internal state */
-        sm::SMStateType currentState;
+        virtual void ReportApplicationState(sm::SMStateType state) {};
+        virtual ~ExecutionClient() = default;;
     };
 }
 

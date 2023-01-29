@@ -18,8 +18,7 @@ set(SRCS
         state_client.h
         sm_types.h
         state_client.cpp
-        execution_client.h
-        execution_client.cpp)
+        execution_client.h)
 
 add_library(Autosar_SM ${SRCS})
 target_include_directories(Autosar_SM PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
