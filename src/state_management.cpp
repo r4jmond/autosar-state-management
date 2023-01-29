@@ -7,21 +7,42 @@ namespace ara::sm {
     void StateManagement::Work() {
         std::cout << "Starting work" << std::endl;
         while (!killFlag) {
-            Worker();
+            if (internalState == FunctionGroupStateType::Off) {
+                On_Actions();
+            }
+            else if (internalState == FunctionGroupStateType::On) {
+                Off_Actions();
+            }
+            triggerOut.SetNotifier(internalState);
         }
         std::cout << "Finished work" << std::endl;
     }
 
-    void StateManagement::Worker() {
+    void StateManagement::On_Actions() {
         UpdateRequestHandler();
+        TriggerInHandler();
+        TriggerInOutHandler();
+        UpdateSMState();
+    }
 
+    void StateManagement::Off_Actions() {
+        UpdateRequestHandler();
+        TriggerInHandler();
+        TriggerInOutHandler();
+        UpdateSMState();
+    }
+
+    void StateManagement::TriggerInHandler() {
         if (triggerIn.IsTrigger()) {
             if (stateClient != nullptr) {
                 stateClient->SmSetState(triggerInOut.GetDesiredState());
             }
             triggerIn.DiscardTrigger();
         }
-        else if (triggerInOut.IsTrigger()) {
+    }
+
+    void StateManagement::TriggerInOutHandler() {
+        if (triggerInOut.IsTrigger()) {
 
             if (stateClient != nullptr) {
                 stateClient->SmSetState(triggerInOut.GetDesiredState());
@@ -30,11 +51,12 @@ namespace ara::sm {
             triggerInOut.SetNotifier(ara::sm::ErrorType::kSuccess, internalState);
             triggerInOut.DiscardTrigger();
         }
+    }
 
+    void StateManagement::UpdateSMState() {
         if (stateClient != nullptr) {
             internalState = stateClient->SmGetState();
         }
-        triggerOut.SetNotifier(internalState);
     }
 
     void StateManagement::UpdateRequestHandler() {
