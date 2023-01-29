@@ -3,22 +3,24 @@
 /** @file trigger_in_out.h
  * @brief Trigger in_out interface. */
 
-namespace ara { namespace com {
+#include "sm_types.h"
+
+namespace ara::com {
 
     /** @brief Fills [SWS_SM_91009] */
     class TriggerInOut {
     public:
-        bool IsNotifier() const;
+        [[nodiscard]] sm::TriggerInOutNotifierType GetNotifier() const;
+        void SetTrigger(sm::SMStateType);
 
-        void SetNotifier(bool newNotifier);
-
-        bool IsTrigger() const;
-
-        void SetTrigger(bool newTrigger);
+        void SetNotifier(sm::ErrorType result, sm::SMStateType currentSMState);
+        [[nodiscard]] bool IsTrigger() const;
+        [[nodiscard]] sm::SMStateType GetDesiredState() const;
+        void DiscardTrigger();
 
     private:
-        bool notifier;
-        bool trigger;
+        sm::TriggerInOutNotifierType notifier;
+        sm::TriggerType trigger;
     };
-}}
+}
 #endif //AUTOSAR_STATE_MANAGEMENT_TRIGGER_IN_OUT_H

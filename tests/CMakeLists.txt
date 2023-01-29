@@ -7,8 +7,11 @@ add_executable( gTests_all
         tests.cpp
         sm_tests.h
         tests_update_request.cpp
+        test_state_client.cpp
         test_network_handler.cpp
-        sm_tests.h)
+        test_trigger_in.cpp
+        test_trigger_out.cpp
+        test_trigger_in_out.cpp)
 
 SET( GTEST_LIBRARIES gtest gtest_main gmock gmock_main )
 target_link_libraries( gTests_all ${GTEST_LIBRARIES} )

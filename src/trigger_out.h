@@ -3,17 +3,19 @@
 /** @file trigger_out.h
  * @brief Trigger out interface. */
 
-namespace ara { namespace com {
+#include "sm_types.h"
+
+namespace ara::com {
 
 /** @brief Fills [SWS_SM_91008] */
     class TriggerOut {
     public:
-        bool IsNotifier() const;
+        [[nodiscard]] sm::SMStateType GetNotifier() const;
 
-        void SetNotifier(bool newNotifier);
+        void SetNotifier(sm::SMStateType);
 
     private:
-        bool notifier;
+        sm::SMStateType notifier;
     };
-}}
+}
 #endif //AUTOSAR_STATE_MANAGEMENT_TRIGGER_OUT_H
