@@ -6,7 +6,7 @@ namespace ara::exec {
     /* Mock ExecutionClient for unit testing. */
     class MockExecutionClient : public ExecutionClient {
     public:
-        MOCK_METHOD(void, ReportApplicationState, (sm::SMStateType state));
+        MOCK_METHOD(void, ReportApplicationState, (sm::FunctionGroupStateType state));
     };
 }
 
@@ -15,7 +15,7 @@ TEST_F(smTests,  testExecutionClient)
     ara::exec::MockExecutionClient mockEC;
     mySM.executionClient = &mockEC;
     EXPECT_CALL(mockEC,
-                ReportApplicationState(ara::sm::SMStateType::On)).Times(testing::AnyNumber());
+                ReportApplicationState(ara::sm::FunctionGroupStateType::On)).Times(testing::AnyNumber());
 
     mySM.stateClient->SmSetState(ara::sm::FunctionGroupStateType::On);
 

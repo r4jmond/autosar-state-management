@@ -12,7 +12,7 @@ namespace ara::exec {
         * @brief ReportApplicationState
         * @details Provides functionality for a Process to report its execution state to Execution Management
         */
-        virtual void ReportApplicationState(sm::SMStateType state) {};
+        virtual void ReportApplicationState(sm::FunctionGroupStateType state) {};
         virtual ~ExecutionClient() = default;;
     };
 }
