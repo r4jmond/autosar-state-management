@@ -33,7 +33,7 @@ namespace ara::exec {
         void GetInitialMachineStateTransitionResult();
 
         /** @brief Gives an information whether desired state is valid. */
-        void undefinedStateCallback();
+        virtual void undefinedStateCallback() {};
 
         /**
         * @brief Requests a state transition for SM FunctionGroup.

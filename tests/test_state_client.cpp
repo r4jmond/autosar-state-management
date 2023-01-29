@@ -8,6 +8,7 @@ namespace ara::exec {
     public:
         MOCK_METHOD(ExecErrc, SetState, (std::string fgName, sm::FunctionGroupStateType fgState));
         MOCK_METHOD(ExecErrc, MachineSetState, (sm::MachineStateType machineState));
+        MOCK_METHOD(void, undefinedStateCallback, ());
     };
 }
 
@@ -42,8 +43,12 @@ TEST_F(smTests, testSMSetStateOff)
 
 TEST_F(smTests, testSMSetStateUndefined)
 {
+    ara::exec::MockStateClient MyStateClient;
+    mySM.stateClient = &MyStateClient;
+    EXPECT_CALL(MyStateClient, undefinedStateCallback);
+
     EXPECT_EQ(mySM.internalState, ara::sm::FunctionGroupStateType::Off);
-    mySM.stateClient->SmSetState((ara::sm::FunctionGroupStateType) ara::sm::MachineStateType::Startup);
+    mySM.stateClient->SmSetState((ara::sm::FunctionGroupStateType) ara::sm::MachineStateType::Restart);
     // let changes to be applied
     using namespace std::chrono_literals;
     std::this_thread::sleep_for(500ms);

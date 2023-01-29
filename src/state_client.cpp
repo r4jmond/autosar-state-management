@@ -3,12 +3,13 @@
 namespace ara::exec {
 
     ExecErrc StateClient::SmSetState(sm::FunctionGroupStateType requestedState) {
-        requestedSMState = requestedState;
-        return ExecErrc::kSuccess;
-    }
-
-    void StateClient::undefinedStateCallback() {
-        // TBD
+        if ((requestedState == sm::FunctionGroupStateType::On) || (requestedState == sm::FunctionGroupStateType::Off)) {
+            requestedSMState = requestedState;
+            return ExecErrc::kSuccess;
+        } else {
+            undefinedStateCallback();
+            return ExecErrc::kGeneralError;
+        }
     }
 
     sm::FunctionGroupStateType StateClient::SmGetState() {
