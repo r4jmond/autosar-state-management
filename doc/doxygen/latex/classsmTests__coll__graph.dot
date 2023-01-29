@@ -1,0 +1,22 @@
+digraph "smTests"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir="LR";
+  Node1 [label="smTests",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip="Text fixture for SM tests."];
+  Node2 -> Node1 [dir="back",color="midnightblue",fontsize="10",style="solid"];
+  Node2 [label="testing::Test",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",tooltip=" "];
+  Node3 -> Node1 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" mySM" ];
+  Node3 [label="ara::sm::StateManagement",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classara_1_1sm_1_1StateManagement.html",tooltip="Class StateManagement to be used by Update and Configuration Management. Fills [SWS_SM_XXXXX]."];
+  Node4 -> Node3 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" triggerInOut" ];
+  Node4 [label="ara::com::TriggerInOut",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classara_1_1com_1_1TriggerInOut.html",tooltip="Fills [SWS_SM_91009]."];
+  Node5 -> Node3 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" triggerIn" ];
+  Node5 [label="ara::com::TriggerIn",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classara_1_1com_1_1TriggerIn.html",tooltip="Fills [SWS_SM_91008]."];
+  Node6 -> Node3 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" triggerOut" ];
+  Node6 [label="ara::com::TriggerOut",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classara_1_1com_1_1TriggerOut.html",tooltip="Fills [SWS_SM_91008]."];
+  Node7 -> Node3 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" myNetworkHandle" ];
+  Node7 [label="ara::com::NetworkHandle",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classara_1_1com_1_1NetworkHandle.html",tooltip=" "];
+  Node8 -> Node3 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" myUpdateRequest" ];
+  Node8 [label="ara::com::UpdateRequest",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$classara_1_1com_1_1UpdateRequest.html",tooltip="Class UpdateRequest to be used by Update and Configuration Management. Fills [SWS_SM_91016]."];
+}

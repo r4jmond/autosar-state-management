@@ -1,0 +1,51 @@
+\hypertarget{classara_1_1sm_1_1StateManagement}{}\doxysection{ara\+::sm\+::State\+Management Class Reference}
+\label{classara_1_1sm_1_1StateManagement}\index{ara::sm::StateManagement@{ara::sm::StateManagement}}
+
+
+Class \mbox{\hyperlink{classara_1_1sm_1_1StateManagement}{State\+Management}} to be used by Update and Configuration Management. Fills \mbox{[}SWS\+\_\+\+SM\+\_\+\+XXXXX\mbox{]}.  
+
+
+
+
+{\ttfamily \#include $<$state\+\_\+management.\+h$>$}
+
+
+
+Collaboration diagram for ara\+::sm\+::State\+Management\+:
+% FIG 0
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classara_1_1sm_1_1StateManagement_ae09607907c6640ca23db6a3db38a67c3}\label{classara_1_1sm_1_1StateManagement_ae09607907c6640ca23db6a3db38a67c3}} 
+void {\bfseries Work} ()
+\item 
+\mbox{\Hypertarget{classara_1_1sm_1_1StateManagement_acd4ae2c721678bb813542e7c26b8deb4}\label{classara_1_1sm_1_1StateManagement_acd4ae2c721678bb813542e7c26b8deb4}} 
+void {\bfseries Kill} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classara_1_1sm_1_1StateManagement_ab3cc0f23552919c2683a23e17204db53}\label{classara_1_1sm_1_1StateManagement_ab3cc0f23552919c2683a23e17204db53}} 
+\mbox{\hyperlink{classara_1_1com_1_1UpdateRequest}{com\+::\+Update\+Request}} {\bfseries my\+Update\+Request}
+\item 
+\mbox{\Hypertarget{classara_1_1sm_1_1StateManagement_a428e2d341b84383aee4c3d83c8fae3d9}\label{classara_1_1sm_1_1StateManagement_a428e2d341b84383aee4c3d83c8fae3d9}} 
+\mbox{\hyperlink{classara_1_1com_1_1NetworkHandle}{com\+::\+Network\+Handle}} {\bfseries my\+Network\+Handle}
+\item 
+\mbox{\Hypertarget{classara_1_1sm_1_1StateManagement_a3b775e65ab663122c198393a3f1d1597}\label{classara_1_1sm_1_1StateManagement_a3b775e65ab663122c198393a3f1d1597}} 
+\mbox{\hyperlink{classara_1_1com_1_1TriggerOut}{com\+::\+Trigger\+Out}} \mbox{\hyperlink{classara_1_1sm_1_1StateManagement_a3b775e65ab663122c198393a3f1d1597}{trigger\+Out}}
+\begin{DoxyCompactList}\small\item\em Fills \mbox{[}SWS\+\_\+\+SM\+\_\+00020\mbox{]}. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classara_1_1sm_1_1StateManagement_a890ec947601d9181c7ec7ed033bc8f34}\label{classara_1_1sm_1_1StateManagement_a890ec947601d9181c7ec7ed033bc8f34}} 
+\mbox{\hyperlink{classara_1_1com_1_1TriggerIn}{com\+::\+Trigger\+In}} \mbox{\hyperlink{classara_1_1sm_1_1StateManagement_a890ec947601d9181c7ec7ed033bc8f34}{trigger\+In}}
+\begin{DoxyCompactList}\small\item\em Fills \mbox{[}SWS\+\_\+\+SM\+\_\+00021\mbox{]}. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classara_1_1sm_1_1StateManagement_a8e4d53d93999581c800affe8d0eec647}\label{classara_1_1sm_1_1StateManagement_a8e4d53d93999581c800affe8d0eec647}} 
+\mbox{\hyperlink{classara_1_1com_1_1TriggerInOut}{com\+::\+Trigger\+In\+Out}} {\bfseries trigger\+In\+Out}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Class \mbox{\hyperlink{classara_1_1sm_1_1StateManagement}{State\+Management}} to be used by Update and Configuration Management. Fills \mbox{[}SWS\+\_\+\+SM\+\_\+\+XXXXX\mbox{]}. 
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+src/\mbox{\hyperlink{state__management_8h}{state\+\_\+management.\+h}}\item 
+src/state\+\_\+management.\+cpp\end{DoxyCompactItemize}
