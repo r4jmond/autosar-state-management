@@ -17,7 +17,9 @@ namespace ara::sm {
     class StateManagement {
     public:
         explicit StateManagement(exec::StateClient* sc);
+        /** @brief Start function of the SM */
         void Work();
+        /** @brief Function killing SM operation */
         void Kill();
         com::UpdateRequest myUpdateRequest;
         com::NetworkHandle myNetworkHandle;
@@ -29,8 +31,18 @@ namespace ara::sm {
         FunctionGroupStateType internalState;
         exec::StateClient* stateClient;
     private:
+        /** @brief SM kill flag */
         bool killFlag;
-        void Worker();
+        /** @brief Function handling SM 'On' State operations */
+        void On_Actions();
+        /** @brief Function handling SM 'Off' State operations */
+        void Off_Actions();
+        /** @brief Function handling TriggerIn */
+        void TriggerInHandler();
+        /** @brief Function handling TriggerInOut */
+        void TriggerInOutHandler();
+        /** @brief Function Updating SM State on EM request */
+        void UpdateSMState();
 
         /** @brief Checks for Update Requests and handles them */
         void UpdateRequestHandler();
