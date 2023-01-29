@@ -12,7 +12,7 @@ namespace ara::exec {
 }
 
 
-TEST_F(smTests, testComSetState)
+TEST(testSuiteSM, testComSetState)
 {
     ara::exec::MockStateClient MyStateClient;
     EXPECT_CALL(MyStateClient, SetState(ara::sm::FunctionGroupNameType::com,
