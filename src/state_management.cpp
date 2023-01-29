@@ -7,6 +7,12 @@ namespace ara::sm {
     void StateManagement::Work() {
         std::cout << "Starting work" << std::endl;
         while (!killFlag) {
+            if (stateClient != nullptr) {
+                if (internalState == FunctionGroupStateType::On || internalState == FunctionGroupStateType::Off) {
+                    stateClient->SetInitialMachineStateTransitionResult(ErrorType::kSuccess);
+                }
+                else stateClient->SetInitialMachineStateTransitionResult(ErrorType::kTransitionFailed);
+            }
             if (internalState == FunctionGroupStateType::Off) {
                 On_Actions();
             }

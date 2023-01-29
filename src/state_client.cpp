@@ -15,4 +15,12 @@ namespace ara::exec {
     sm::FunctionGroupStateType StateClient::SmGetState() {
         return requestedSMState;
     }
+
+    sm::ErrorType StateClient::GetInitialMachineStateTransitionResult(){
+        return initialMachineStateTransitionResult;
+    }
+
+    void StateClient::SetInitialMachineStateTransitionResult(sm::ErrorType result) {
+        initialMachineStateTransitionResult = result;
+    }
 }

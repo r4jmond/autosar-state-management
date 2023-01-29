@@ -20,17 +20,20 @@ namespace ara::exec {
     class StateClient {
     private:
         /** @brief Variable to store the result of AUTOSAR Adaptive Platform initial transition to Startup state. */
-        bool initialMachineStateTransitionResult;
+        sm::ErrorType initialMachineStateTransitionResult;
 
         /** @brief Variable to store requested SM state after calling SMSetState. */
         sm::FunctionGroupStateType requestedSMState;
     public:
         StateClient()
-                : initialMachineStateTransitionResult(false),
+                : initialMachineStateTransitionResult(sm::ErrorType::kTransitionFailed),
                   requestedSMState(sm::FunctionGroupStateType::Off) {}
 
         /** @brief Retrieve the result of AUTOSAR Adaptive Platform initial transition to Startup state. */
-        void GetInitialMachineStateTransitionResult();
+        sm::ErrorType GetInitialMachineStateTransitionResult();
+
+        /** @brief Set the result of AUTOSAR Adaptive Platform initial transition to Startup state. */
+        void SetInitialMachineStateTransitionResult(sm::ErrorType result);
 
         /** @brief Gives an information whether desired state is valid. */
         virtual void undefinedStateCallback() {};
