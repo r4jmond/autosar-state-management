@@ -19,6 +19,7 @@ namespace ara::sm {
     }
 
     void StateManagement::On_Actions() {
+        ErrorHandler();
         UpdateRequestHandler();
         TriggerInHandler();
         TriggerInOutHandler();
@@ -26,6 +27,7 @@ namespace ara::sm {
     }
 
     void StateManagement::Off_Actions() {
+        ErrorHandler();
         UpdateRequestHandler();
         TriggerInHandler();
         TriggerInOutHandler();
@@ -50,6 +52,15 @@ namespace ara::sm {
             }
             triggerInOut.SetNotifier(ara::sm::ErrorType::kSuccess, internalState);
             triggerInOut.DiscardTrigger();
+        }
+    }
+
+    void StateManagement::ErrorHandler(){
+        if(recoveryAction.RecoveryActionHandler(&errorMessage)){
+            if(errorOccurred){
+                //todo MachineSetState(restart);
+            }
+            std::cout << errorMessage << std::endl;
         }
     }
 
@@ -151,6 +162,14 @@ namespace ara::sm {
         killFlag = true;
     }
 
+    void StateManagement::ConnectClientToServer(std::string clientID, com::PowerMode* client){
+        communicationGroupServer.AddClientToGroup(clientID, client);
+    }
+
+    void StateManagement::SendPowerModeStatus(std::string mode){
+        communicationGroupServer.Broadcast(mode);
+    }
+
     StateManagement::StateManagement(exec::StateClient* sc) :
         myUpdateRequest{com::UpdateRequest()},
         myNetworkHandle{com::NetworkHandle()},
@@ -159,5 +178,7 @@ namespace ara::sm {
         triggerInOut{com::TriggerInOut()},
         internalState{FunctionGroupStateType::Off},
         stateClient{sc},
-        killFlag{false} {}
+        killFlag{false},
+        errorOccurred{false},
+        {}
 }

@@ -10,6 +10,8 @@
 #include "trigger_out.h"
 #include "network_handle.h"
 #include "state_client.h"
+#include "recovery_action.h"
+#include "communication_group_server.h"
 
 namespace ara::sm {
     /** @brief Class StateManagement to be used by Update and Configuration Management.
@@ -30,9 +32,18 @@ namespace ara::sm {
         com::TriggerInOut triggerInOut;
         FunctionGroupStateType internalState;
         exec::StateClient* stateClient;
+        phm::RecoveryAction<std::string> recoveryAction;
+        com::CommunicationGroupServer<com::PowerMode*> communicationGroupServer;
+
     private:
         /** @brief SM kill flag */
         bool killFlag;
+        /** @brief SM error occurred flag */
+        bool errorOccurred;
+        /** @brief String to store error message from phm */
+        std::string errorMessage;
+        /** @brief Function to check if PHM report errors and providing recovery action for them */
+        void ErrorHandler();
         /** @brief Function handling SM 'On' State operations */
         void On_Actions();
         /** @brief Function handling SM 'Off' State operations */
@@ -43,7 +54,10 @@ namespace ara::sm {
         void TriggerInOutHandler();
         /** @brief Function Updating SM State on EM request */
         void UpdateSMState();
-
+        /** @brief Function used to add Client Processes to Server */
+        void ConnectClientToServer(std::string clientID, com::PowerMode* client);
+        /** @brief Function sending power mode change to all processes */
+        void SendPowerModeStatus(std::string mode);
         /** @brief Checks for Update Requests and handles them */
         void UpdateRequestHandler();
 
@@ -59,7 +73,8 @@ namespace ara::sm {
                                                         FunctionGroupNameType::phm,
                                                         FunctionGroupNameType::diag,
                                                         FunctionGroupNameType::ucm,
-                                                        FunctionGroupNameType::nm };
+                                                        FunctionGroupNameType::nm,
+                                                        FunctionGroupNameType::com};
     };
 }
 
