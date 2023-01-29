@@ -1,8 +1,0 @@
-digraph "Graphical Class Hierarchy"
-{
- // LATEX_PDF_SIZE
-  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
-  node [fontname="Helvetica",fontsize="10",shape=record];
-  rankdir="LR";
-  Node0 [label="ara::com::UpdateRequest\l::RequestMsg",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$structara_1_1com_1_1UpdateRequest_1_1RequestMsg.html",tooltip="RequestMsg sent to SM."];
-}
