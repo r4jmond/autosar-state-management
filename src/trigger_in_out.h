@@ -11,11 +11,11 @@ namespace ara::com {
     class TriggerInOut {
     public:
         [[nodiscard]] sm::TriggerInOutNotifierType GetNotifier() const;
-        void SetTrigger(sm::SMStateType);
+        void SetTrigger(sm::FunctionGroupStateType);
 
-        void SetNotifier(sm::ErrorType result, sm::SMStateType currentSMState);
+        void SetNotifier(sm::ErrorType result, sm::FunctionGroupStateType currentSMState);
         [[nodiscard]] bool IsTrigger() const;
-        [[nodiscard]] sm::SMStateType GetDesiredState() const;
+        [[nodiscard]] sm::FunctionGroupStateType GetDesiredState() const;
         void DiscardTrigger();
 
     private:

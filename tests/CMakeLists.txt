@@ -6,8 +6,7 @@ include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 add_executable( gTests_all
         tests.cpp
         sm_tests.h
-        test_reset_execution.cpp
-        test_network_handler.cpp
+        tests_update_request.cpp
         test_state_client.cpp
         test_network_handler.cpp
         test_trigger_in.cpp

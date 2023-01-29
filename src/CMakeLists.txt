@@ -15,8 +15,9 @@ set(SRCS
         trigger_in_out.h
         network_handle.cpp
         network_handle.h
-        state_client.h
         sm_types.h
+        contains.h
+        state_client.h
         state_client.cpp
         power_mode.cpp
         power_mode.h

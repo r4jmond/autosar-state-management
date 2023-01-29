@@ -6,7 +6,7 @@ namespace ara::com {
         return notifier;
     }
 
-    void TriggerInOut::SetTrigger(sm::SMStateType desiredSMState) {
+    void TriggerInOut::SetTrigger(sm::FunctionGroupStateType desiredSMState) {
         trigger.desiredSMState = desiredSMState;
         trigger.isNewTrigger = true;
     }
@@ -15,7 +15,7 @@ namespace ara::com {
         trigger.isNewTrigger = false;
     }
 
-    void TriggerInOut::SetNotifier(sm::ErrorType result, sm::SMStateType currentSMState) {
+    void TriggerInOut::SetNotifier(sm::ErrorType result, sm::FunctionGroupStateType currentSMState) {
         notifier.result = result;
         notifier.currentSMState = currentSMState;
     }
@@ -24,7 +24,7 @@ namespace ara::com {
         return trigger.isNewTrigger;
     }
 
-    sm::SMStateType TriggerInOut::GetDesiredState() const {
+    sm::FunctionGroupStateType TriggerInOut::GetDesiredState() const {
         return trigger.desiredSMState;
     }
 }
