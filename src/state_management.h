@@ -10,6 +10,7 @@
 #include "trigger_out.h"
 #include "network_handle.h"
 #include "state_client.h"
+#include "recovery_action.h"
 
 namespace ara::sm {
     /** @brief Class StateManagement to be used by Update and Configuration Management.
@@ -28,6 +29,8 @@ namespace ara::sm {
         com::TriggerInOut triggerInOut;
         SMStateType internalState = SMStateType::Off;
         exec::StateClient* stateClient = nullptr;
+        phm::RecoveryAction<std::string> recoveryAction;
+
     private:
         bool killFlag;
         void Worker();
