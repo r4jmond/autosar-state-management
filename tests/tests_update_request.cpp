@@ -4,23 +4,40 @@
 
 #include "sm_tests.h"
 
+using namespace std::chrono_literals;
+
 /** @brief Tests [SWS_SM_00203] - Start Update Session
  *  @details State Management shall provide the service interface UpdateRequest
  *           to Update and Configuration Management with the method call
  *           RequestUpdateSession to check if an update can be performed. (RS_SM_00100) */
 TEST_F(smTests, testStartUpdateSession) {
-    //todo set SM to On
 
     /** @test RequestUpdateSession in SM On State test */
+    /** Set SM to ON */
+    mySC.SmSetState(ara::sm::FunctionGroupStateType::On);
+    /** wait for the changes to propagate */
+    std::this_thread::sleep_for(20ms);
+    auto notifier = mySM.triggerOut.GetNotifier();
+    /** Assert that the SM is on */
+    ASSERT_EQ(notifier, ara::sm::SMStateType::On);
+
     ara::sm::ErrorType errorCode =  mySM.myUpdateRequest.RequestUpdateSession();
     /** @test SM shall accept RequestUpdateSession in On state */
     EXPECT_EQ(errorCode, ara::sm::ErrorType::kSuccess);
     /** @test Update Session shall be true */
     EXPECT_EQ(true, mySM.myUpdateRequest.IsUpdateSession());
 
-    // todo set SM to Off and uncomment lines below
-
     /** @test RequestUpdateSession in SM Off State test */
+    /** Set SM to Off */
+    mySC.SmSetState(ara::sm::FunctionGroupStateType::Off);
+    /** wait for the changes to propagate */
+    std::this_thread::sleep_for(20ms);
+    notifier = mySM.triggerOut.GetNotifier();
+    /** Assert that the SM is off */
+    ASSERT_EQ(notifier, ara::sm::SMStateType::Off);
+
+    // todo uncomment lines below after handling requestUpdate in Off state
+
 //    errorCode =  mySM.myUpdateRequest.RequestUpdateSession();
     /** @test SM shall reject RequestUpdateSession in Off state */
 //    EXPECT_EQ(errorCode, ara::sm::ErrorType::kRejected);
@@ -34,9 +51,15 @@ TEST_F(smTests, testStartUpdateSession) {
  *          active Update Session. (RS_SM_00004) */
 TEST_F(smTests, testMultipleUpdateSession) {
 
-    //todo set SM to On
-
     /** @test RequestMultipleUpdateSession in SM On State test */
+    /** Set SM to ON */
+    mySC.SmSetState(ara::sm::FunctionGroupStateType::On);
+    /** wait for the changes to propagate */
+    std::this_thread::sleep_for(20ms);
+    auto notifier = mySM.triggerOut.GetNotifier();
+    /** Assert that the SM is on */
+    ASSERT_EQ(notifier, ara::sm::SMStateType::On);
+
     ara::sm::ErrorType errorCode =  mySM.myUpdateRequest.RequestUpdateSession();
     /** @test SM shall accept first RequestUpdateSession in On state */
     ASSERT_EQ(errorCode, ara::sm::ErrorType::kSuccess);
@@ -53,9 +76,15 @@ TEST_F(smTests, testMultipleUpdateSession) {
  *  @details State Management shall persist information about ongoing update session,
  *           thus it can be read out after any kind of Machine reset.(RS_SM_00004) */
 TEST_F(smTests, testPersistSessionStatus) {
-    //todo set SM to On
-
     /** @test Persist Session Status test */
+    /** Set SM to ON */
+    mySC.SmSetState(ara::sm::FunctionGroupStateType::On);
+    /** wait for the changes to propagate */
+    std::this_thread::sleep_for(20ms);
+    auto notifier = mySM.triggerOut.GetNotifier();
+    /** Assert that the SM is on */
+    ASSERT_EQ(notifier, ara::sm::SMStateType::On);
+
     /* Request update session */
     ara::sm::ErrorType errorCode =  mySM.myUpdateRequest.RequestUpdateSession();
     /** @test Assert that request Update Session is successful */
@@ -66,6 +95,15 @@ TEST_F(smTests, testPersistSessionStatus) {
     errorCode = mySM.myUpdateRequest.ResetMachine();
     /** @test Assert that restart request is successful */
     ASSERT_EQ(errorCode, ara::sm::ErrorType::kSuccess);
+
+    /** Set SM to ON */
+    mySC.SmSetState(ara::sm::FunctionGroupStateType::On);
+    /** wait for the changes to propagate */
+    std::this_thread::sleep_for(20ms);
+    notifier = mySM.triggerOut.GetNotifier();
+    /** Assert that the SM is on */
+    ASSERT_EQ(notifier, ara::sm::SMStateType::On);
+
     /** @test SM shall persist information about ongoing update session */
     EXPECT_EQ(true, mySM.myUpdateRequest.IsUpdateSession());
 }
@@ -76,20 +114,26 @@ TEST_F(smTests, testPersistSessionStatus) {
  *           ResetMachine to request a Machine reset.(RS_SM_00004) */
 TEST_F(smTests, testResetExecution)
 {
-    //todo  Set SM to Off
+    /** Set SM to ON */
+    mySC.SmSetState(ara::sm::FunctionGroupStateType::On);
+    /** wait for the changes to propagate */
+    std::this_thread::sleep_for(20ms);
+    auto notifier = mySM.triggerOut.GetNotifier();
+    /** Assert that the SM is on */
+    ASSERT_EQ(notifier, ara::sm::SMStateType::On);
 
-    /** @test Reset Execution test */
-    /* Request update session */
-    ara::sm::ErrorType errorCode =  mySM.myUpdateRequest.RequestUpdateSession();
-    /** @test Assert that RequestUpdateSession is successful */
+    /** @test ResetMachine request without active UpdateSession shall be rejected */
+    auto errorCode = mySM.myUpdateRequest.ResetMachine();
+    EXPECT_EQ(errorCode, ara::sm::ErrorType::kRejected);
+
+    /** @test RequestUpdateSession shall be accepted */
+    errorCode =  mySM.myUpdateRequest.RequestUpdateSession();
+    /** SM shall accept RequestUpdateSession in On state */
     ASSERT_EQ(errorCode, ara::sm::ErrorType::kSuccess);
+    /** Assert that the Update Session is true */
+    ASSERT_EQ(true, mySM.myUpdateRequest.IsUpdateSession());
+    /** @test ResetMachine request with active UpdateSession shall be accepted */
     errorCode = mySM.myUpdateRequest.ResetMachine();
-    /** @test SM shall accept ResetMachine request in Off state */
-    EXPECT_EQ(errorCode, ara::sm::ErrorType::kSuccess);
-    //todo set SM to On
-
-    errorCode = mySM.myUpdateRequest.ResetMachine();
-    /** @test SM shall accept ResetMachine request in On state */
     EXPECT_EQ(errorCode, ara::sm::ErrorType::kSuccess);
 }
 
@@ -100,11 +144,21 @@ TEST_F(smTests, testResetExecution)
  *           the update session is finished. (RS_SM_00004) */
 TEST_F(smTests, testStopUpdateSession)
 {
-    //todo set SM to On
+    /** Set SM to ON */
+    mySC.SmSetState(ara::sm::FunctionGroupStateType::On);
+    /** wait for the changes to propagate */
+    std::this_thread::sleep_for(20ms);
+    auto notifier = mySM.triggerOut.GetNotifier();
+    /** Assert that the SM is on */
+    ASSERT_EQ(notifier, ara::sm::SMStateType::On);
 
-    /** @test StopUpdateSession test */
+    /** @test Stop update request shall be rejected without active update session */
+    auto errorCode =  mySM.myUpdateRequest.StopUpdateSession();
+    EXPECT_EQ(errorCode, ara::sm::ErrorType::kRejected);
+
+    /** @test StopUpdateSession test with active UpdateSession */
     /* Request update session */
-    ara::sm::ErrorType errorCode =  mySM.myUpdateRequest.RequestUpdateSession();
+    errorCode =  mySM.myUpdateRequest.RequestUpdateSession();
     /** @test Assert that RequestUpdateSession is successful */
     ASSERT_EQ(errorCode, ara::sm::ErrorType::kSuccess);
     /** @test Assert that the Update Session is active */
@@ -125,7 +179,13 @@ TEST_F(smTests, testStopUpdateSession)
  *           Function Groups to be updated. (RS_SM_00004) */
 TEST_F(smTests, testPrepareUpdate)
 {
-    //todo set SM to On
+    /** Set SM to ON */
+    mySC.SmSetState(ara::sm::FunctionGroupStateType::On);
+    /** wait for the changes to propagate */
+    std::this_thread::sleep_for(20ms);
+    auto notifier = mySM.triggerOut.GetNotifier();
+    /** Assert that the SM is on */
+    ASSERT_EQ(notifier, ara::sm::SMStateType::On);
 
     ara::sm::FunctionGroupListType testFGList {
             ara::sm::FunctionGroupNameType::sm,
@@ -134,12 +194,11 @@ TEST_F(smTests, testPrepareUpdate)
             ara::sm::FunctionGroupNameType::ucm
     };
 
-    /** @test PrepareUpdate request without active Update Session test */
+    /** @test PrepareUpdate request without active Update Session test shall be rejected */
     ara::sm::ErrorType errorCode =  mySM.myUpdateRequest.PrepareUpdate(testFGList);
-    /** @test SM Shall reject that request */
     EXPECT_EQ(errorCode, ara::sm::ErrorType::kRejected);
 
-    /** @test PrepareUpdate test */
+    /** @test PrepareUpdate test with active update session */
     /* Request update session */
     errorCode =  mySM.myUpdateRequest.RequestUpdateSession();
     /** @test Assert that RequestUpdateSession is successful */
@@ -148,6 +207,13 @@ TEST_F(smTests, testPrepareUpdate)
     errorCode =  mySM.myUpdateRequest.PrepareUpdate(testFGList);
     /** @test SM shall accept PrepareUpdate Request */
     EXPECT_EQ(errorCode, ara::sm::ErrorType::kSuccess);
+
+    /** @test Prepare Update request with erroneous data shall fail */
+    ara::sm::FunctionGroupListType erroneousFGList {
+            ara::sm::FunctionGroupNameType::log
+    };
+    errorCode =  mySM.myUpdateRequest.PrepareUpdate(erroneousFGList);
+    EXPECT_EQ(errorCode, ara::sm::ErrorType::kFailed);
 }
 
 /** @brief Tests [SWS_SM_00207] - Verify update
@@ -157,7 +223,13 @@ TEST_F(smTests, testPrepareUpdate)
  *           given Function Groups. (RS_SM_00004) */
 TEST_F(smTests, testVerifyUpdate)
 {
-    //todo set SM to On
+    /** Set SM to ON */
+    mySC.SmSetState(ara::sm::FunctionGroupStateType::On);
+    /** wait for the changes to propagate */
+    std::this_thread::sleep_for(20ms);
+    auto notifier = mySM.triggerOut.GetNotifier();
+    /** Assert that the SM is on */
+    ASSERT_EQ(notifier, ara::sm::SMStateType::On);
 
     ara::sm::FunctionGroupListType testFGList {
             ara::sm::FunctionGroupNameType::sm,
@@ -194,8 +266,13 @@ TEST_F(smTests, testVerifyUpdate)
  *           Function Groups to be rolled back. (RS_SM_00004) */
 TEST_F(smTests, testPrepareRollback)
 {
-//    GTEST_SKIP() << "temp skip test";
-    //todo set SM to On
+    /** Set SM to ON */
+    mySC.SmSetState(ara::sm::FunctionGroupStateType::On);
+    /** wait for the changes to propagate */
+    std::this_thread::sleep_for(20ms);
+    auto notifier = mySM.triggerOut.GetNotifier();
+    /** Assert that the SM is on */
+    ASSERT_EQ(notifier, ara::sm::SMStateType::On);
 
     ara::sm::FunctionGroupListType testFGList {
             ara::sm::FunctionGroupNameType::sm,

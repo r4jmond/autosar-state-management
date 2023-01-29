@@ -117,7 +117,7 @@ namespace ara::com {
          *  @return bool updateSession. */
         [[nodiscard]] bool IsUpdateSession() const;
         /** @brief updateSession setter used by SM. */
-        void SetUpdateSession(bool updateSession);
+        void SetUpdateSession(bool newUpdateSession);
 
     private:
         /** @brief list being used by SM and set by PrepareUpdate/VerifyUpdate/PrepareRollback functions */
