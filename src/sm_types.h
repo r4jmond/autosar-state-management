@@ -10,12 +10,6 @@
 
 namespace ara::sm {
 
-    /** @brief List of SM stateMachine states. Fills [RS_SM_00005]. */
-    enum class SMStateType {
-        Off,
-        On
-    };
-
     /** @brief Error type of SM. Fills [SWS_SM_91010]. */
     enum class ErrorType {
         /** No error. */
@@ -40,9 +34,36 @@ namespace ara::sm {
     };
 
     /**
+    * @brief The state type of the Function Group.
+    * @details The element of State Management that characterizes the current status of a set of
+    *          (functionally coherent) user-level Applications. */
+    enum class FunctionGroupStateType {
+        /** function group switched off. */
+        Off,
+        /** function group working. */
+        On
+    };
+
+    /**
+    * @brief The state type of the "MachineFG" Function Group
+    * @details The state of Function Group "MachineFG" with some predefined states (Startup/Shutdown/Restart).
+    *          "MachineFG" is a Function Group with a predefined name, which is mainly used to control Machine
+    *          lifecycle and processes of platform level Applications. */
+    enum class MachineStateType {
+        /** Turning on the machine. */
+        Startup,
+        /** Machine working state. */
+        On,
+        /** Turning off the machine. */
+        Shutdown,
+        /** Restarting the machine. */
+        Restart
+    };
+
+    /**
      * @brief Fills [SWS_SM_91011]
      * @details Message to all running Processes in the system to indicate a request for a PowerMode switch */
-    struct PowerModeMsg {
+    class PowerModeMsg {
     public:
         /** @brief 'On' - normal operation */
         static inline const std::string On = "On";
@@ -70,7 +91,7 @@ namespace ara::sm {
     * @brief Fills [SWS_SM_91013]
     * @details Message to all Processes(in a SoftwareCluster) to indicate a request to perform
                Diagnostic SoftReset. */
-    struct DiagnosticResetMsg {
+    class DiagnosticResetMsg {
     public:
         /** @brief 'SoftReset' - normal operation */
         static inline const std::string SoftReset = "SoftReset";
@@ -91,7 +112,7 @@ namespace ara::sm {
     };
 
     /** @brief FunctionGroup shortName type. Fills [SWS_SM_91018]. */
-    struct FunctionGroupNameType {
+    class FunctionGroupNameType {
     public:
         /** @brief Adaptive Platform Core */
         static inline const std::string core = "core";
@@ -130,16 +151,19 @@ namespace ara::sm {
     /** @brief A list of FunctionGroups type. Fills [SWS_SM_91019]. */
     typedef std::vector<std::string> FunctionGroupListType;
 
-
     /**
     * @brief Fills [SWS_SM_91009]
     * @details Type used for triggering SM state change */
     class TriggerInOutNotifierType {
     public:
+        TriggerInOutNotifierType() :
+            result(ErrorType::kFailed),
+            currentSMState(FunctionGroupStateType::Off) {}
+    public:
         /** @brief To inform applications about state transition */
-        sm::ErrorType result = ErrorType::kFailed;
+        sm::ErrorType result;
         /** @brief SM state after processing trigger */
-        SMStateType currentSMState = SMStateType::Off;
+        FunctionGroupStateType currentSMState;
     };
 
     /**
@@ -147,26 +171,14 @@ namespace ara::sm {
     * @details Type used for triggering SM state change */
     class TriggerType {
     public:
+        /** @brief TriggerType default constructor */
+        TriggerType() :
+            isNewTrigger(false),
+            desiredSMState(FunctionGroupStateType::Off) {}
         /** @brief To inform SM about incoming trigger */
-        bool isNewTrigger = false;
+        bool isNewTrigger;
         /** @brief Desired SM state after trigger */
-        SMStateType desiredSMState = SMStateType::Off;
-    };
-
-    /**
-    * @brief Fills []
-    * @details States of Adaptive Platform Function Groups */
-    enum class FunctionGroupStateType {
-        /** function group switched off. */
-        Off,
-        /** function group going on. */
-        Startup,
-        /** function group working. */
-        On,
-        /** function group going off. */
-        Shutdown,
-        /** function group restart. */
-        Restart
+        FunctionGroupStateType desiredSMState;
     };
 }
 

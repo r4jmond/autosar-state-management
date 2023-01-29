@@ -2,19 +2,16 @@
 
 namespace ara::exec {
 
-    void StateClient::SmSetState(sm::FunctionGroupStateType requestedState) {
-        if (sm::FunctionGroupStateType::Off == requestedState) {
-            requestedSMState = ara::sm::SMStateType::Off;
-        }
-        else if (sm::FunctionGroupStateType::On == requestedState) {
-            requestedSMState = ara::sm::SMStateType::On;
-        }
-        else {
-            undefinedStateCallback();
-        }
+    ExecErrc StateClient::SmSetState(sm::FunctionGroupStateType requestedState) {
+        requestedSMState = requestedState;
+        return ExecErrc::kSuccess;
     }
 
     void StateClient::undefinedStateCallback() {
         // TBD
+    }
+
+    sm::FunctionGroupStateType StateClient::SmGetState() {
+        return requestedSMState;
     }
 }

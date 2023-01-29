@@ -16,37 +16,23 @@ namespace ara::sm {
         UpdateRequestHandler();
 
         if (triggerIn.IsTrigger()) {
-            SMStateType requestedSMState = triggerInOut.GetDesiredState();
-            FunctionGroupStateType newSMState = FunctionGroupStateType::Shutdown;
-            if (requestedSMState == SMStateType::On) {
-                newSMState = FunctionGroupStateType::On;
-            } else if (requestedSMState == SMStateType::Off) {
-                newSMState = FunctionGroupStateType::Off;
-            }
             if (stateClient != nullptr) {
-                stateClient->SmSetState(newSMState);
+                stateClient->SmSetState(triggerInOut.GetDesiredState());
             }
             triggerIn.DiscardTrigger();
         }
         else if (triggerInOut.IsTrigger()) {
-            SMStateType requestedSMState = triggerInOut.GetDesiredState();
-            FunctionGroupStateType newSMState = FunctionGroupStateType::Shutdown;
-            if (requestedSMState == SMStateType::On) {
-                newSMState = FunctionGroupStateType::On;
-            } else if (requestedSMState == SMStateType::Off) {
-                newSMState = FunctionGroupStateType::Off;
-            }
 
             if (stateClient != nullptr) {
-                stateClient->SmSetState(newSMState);
-                internalState = stateClient->requestedSMState;
+                stateClient->SmSetState(triggerInOut.GetDesiredState());
+                internalState = stateClient->SmGetState();
             }
             triggerInOut.SetNotifier(ara::sm::ErrorType::kSuccess, internalState);
             triggerInOut.DiscardTrigger();
         }
 
         if (stateClient != nullptr) {
-            internalState = stateClient->requestedSMState;
+            internalState = stateClient->SmGetState();
         }
         triggerOut.SetNotifier(internalState);
     }
@@ -149,6 +135,7 @@ namespace ara::sm {
         triggerOut{com::TriggerOut()},
         triggerIn{com::TriggerIn()},
         triggerInOut{com::TriggerInOut()},
+        internalState{FunctionGroupStateType::Off},
         stateClient{sc},
         killFlag{false} {}
 }

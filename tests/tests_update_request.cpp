@@ -19,7 +19,7 @@ TEST_F(smTests, testStartUpdateSession) {
     std::this_thread::sleep_for(20ms);
     auto notifier = mySM.triggerOut.GetNotifier();
     /** Assert that the SM is on */
-    ASSERT_EQ(notifier, ara::sm::SMStateType::On);
+    ASSERT_EQ(notifier, ara::sm::FunctionGroupStateType::On);
 
     ara::sm::ErrorType errorCode =  mySM.myUpdateRequest.RequestUpdateSession();
     /** @test SM shall accept RequestUpdateSession in On state */
@@ -34,7 +34,7 @@ TEST_F(smTests, testStartUpdateSession) {
     std::this_thread::sleep_for(20ms);
     notifier = mySM.triggerOut.GetNotifier();
     /** Assert that the SM is off */
-    ASSERT_EQ(notifier, ara::sm::SMStateType::Off);
+    ASSERT_EQ(notifier, ara::sm::FunctionGroupStateType::Off);
 
     // todo uncomment lines below after handling requestUpdate in Off state
 
@@ -58,7 +58,7 @@ TEST_F(smTests, testMultipleUpdateSession) {
     std::this_thread::sleep_for(20ms);
     auto notifier = mySM.triggerOut.GetNotifier();
     /** Assert that the SM is on */
-    ASSERT_EQ(notifier, ara::sm::SMStateType::On);
+    ASSERT_EQ(notifier, ara::sm::FunctionGroupStateType::On);
 
     ara::sm::ErrorType errorCode =  mySM.myUpdateRequest.RequestUpdateSession();
     /** @test SM shall accept first RequestUpdateSession in On state */
@@ -83,7 +83,7 @@ TEST_F(smTests, testPersistSessionStatus) {
     std::this_thread::sleep_for(20ms);
     auto notifier = mySM.triggerOut.GetNotifier();
     /** Assert that the SM is on */
-    ASSERT_EQ(notifier, ara::sm::SMStateType::On);
+    ASSERT_EQ(notifier, ara::sm::FunctionGroupStateType::On);
 
     /* Request update session */
     ara::sm::ErrorType errorCode =  mySM.myUpdateRequest.RequestUpdateSession();
@@ -102,7 +102,7 @@ TEST_F(smTests, testPersistSessionStatus) {
     std::this_thread::sleep_for(20ms);
     notifier = mySM.triggerOut.GetNotifier();
     /** Assert that the SM is on */
-    ASSERT_EQ(notifier, ara::sm::SMStateType::On);
+    ASSERT_EQ(notifier, ara::sm::FunctionGroupStateType::On);
 
     /** @test SM shall persist information about ongoing update session */
     EXPECT_EQ(true, mySM.myUpdateRequest.IsUpdateSession());
@@ -120,7 +120,7 @@ TEST_F(smTests, testResetExecution)
     std::this_thread::sleep_for(20ms);
     auto notifier = mySM.triggerOut.GetNotifier();
     /** Assert that the SM is on */
-    ASSERT_EQ(notifier, ara::sm::SMStateType::On);
+    ASSERT_EQ(notifier, ara::sm::FunctionGroupStateType::On);
 
     /** @test ResetMachine request without active UpdateSession shall be rejected */
     auto errorCode = mySM.myUpdateRequest.ResetMachine();
@@ -150,7 +150,7 @@ TEST_F(smTests, testStopUpdateSession)
     std::this_thread::sleep_for(20ms);
     auto notifier = mySM.triggerOut.GetNotifier();
     /** Assert that the SM is on */
-    ASSERT_EQ(notifier, ara::sm::SMStateType::On);
+    ASSERT_EQ(notifier, ara::sm::FunctionGroupStateType::On);
 
     /** @test Stop update request shall be rejected without active update session */
     auto errorCode =  mySM.myUpdateRequest.StopUpdateSession();
@@ -185,7 +185,7 @@ TEST_F(smTests, testPrepareUpdate)
     std::this_thread::sleep_for(20ms);
     auto notifier = mySM.triggerOut.GetNotifier();
     /** Assert that the SM is on */
-    ASSERT_EQ(notifier, ara::sm::SMStateType::On);
+    ASSERT_EQ(notifier, ara::sm::FunctionGroupStateType::On);
 
     ara::sm::FunctionGroupListType testFGList {
             ara::sm::FunctionGroupNameType::sm,
@@ -229,7 +229,7 @@ TEST_F(smTests, testVerifyUpdate)
     std::this_thread::sleep_for(20ms);
     auto notifier = mySM.triggerOut.GetNotifier();
     /** Assert that the SM is on */
-    ASSERT_EQ(notifier, ara::sm::SMStateType::On);
+    ASSERT_EQ(notifier, ara::sm::FunctionGroupStateType::On);
 
     ara::sm::FunctionGroupListType testFGList {
             ara::sm::FunctionGroupNameType::sm,
@@ -272,7 +272,7 @@ TEST_F(smTests, testPrepareRollback)
     std::this_thread::sleep_for(20ms);
     auto notifier = mySM.triggerOut.GetNotifier();
     /** Assert that the SM is on */
-    ASSERT_EQ(notifier, ara::sm::SMStateType::On);
+    ASSERT_EQ(notifier, ara::sm::FunctionGroupStateType::On);
 
     ara::sm::FunctionGroupListType testFGList {
             ara::sm::FunctionGroupNameType::sm,

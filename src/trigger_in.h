@@ -11,9 +11,9 @@ namespace ara::com {
     class TriggerIn {
     public:
         [[nodiscard]] bool IsTrigger() const;
-        [[nodiscard]] sm::SMStateType GetDesiredState() const;
+        [[nodiscard]] sm::FunctionGroupStateType GetDesiredState() const;
 
-        void SetTrigger(sm::SMStateType);
+        void SetTrigger(sm::FunctionGroupStateType);
         void DiscardTrigger();
 
     private:
