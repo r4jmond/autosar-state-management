@@ -11,6 +11,8 @@
 #include "network_handle.h"
 #include "state_client.h"
 #include "recovery_action.h"
+#include "power_mode.h"
+#include "communication_group_server.h"
 
 namespace ara::sm {
     /** @brief Class StateManagement to be used by Update and Configuration Management.
@@ -30,6 +32,7 @@ namespace ara::sm {
         SMStateType internalState = SMStateType::Off;
         exec::StateClient* stateClient = nullptr;
         phm::RecoveryAction<std::string> recoveryAction;
+        com::CommunicationGroupServer<com::PowerMode*> communicationGroupServer;
 
     private:
         bool killFlag;

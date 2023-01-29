@@ -64,12 +64,13 @@ namespace ara::com {
             std::vector<std::string> listClients()
             {
                 std::string tmp = "";
+                std::vector<std::string> listOfClients(10);
                 for(const auto& kv : groupClients)
                 {
-                    tmp = tmp + kv.first;
+                    listOfClients.push_back(kv.first);
                 }
 
-                return tmp;
+                return listOfClients;
             }
 
             /**
@@ -81,7 +82,7 @@ namespace ara::com {
             */
             bool message(std::string clientID, std::string msg)
             {
-                if(groupClients.count(name) == 0)
+                if(groupClients.count(clientID) == 0)
                 {
                     return false;
                 }
