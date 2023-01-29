@@ -6,124 +6,69 @@
 #include "sm_types.h"
 
 namespace ara::exec {
+
+    /** @brief Simplified version of Execution Management error codes
+     *  @details from the [SWS_EM_02281] */
+    enum class ExecErrc {
+        /** No error */
+        kSuccess = 0,
+        /** Error occured */
+        kGeneralError = 1,
+    };
+
     /** @brief Class StateClient to be used for communication between SM and EM */
     class StateClient {
-    public:
+    private:
         /** @brief Variable to store the result of AUTOSAR Adaptive Platform initial transition to Startup state. */
         bool initialMachineStateTransitionResult;
 
         /** @brief Variable to store requested SM state after calling SMSetState. */
-        ara::sm::SMStateType requestedSMState;
+        sm::FunctionGroupStateType requestedSMState;
     public:
-        /**
-        * @brief GetInitialMachineStateTransitionResult
-        * @details Retrieve the result of AUTOSAR Adaptive Platform initial transition to Startup state.
-        */
+        StateClient()
+                : initialMachineStateTransitionResult(false),
+                  requestedSMState(sm::FunctionGroupStateType::Off) {}
+
+        /** @brief Retrieve the result of AUTOSAR Adaptive Platform initial transition to Startup state. */
         void GetInitialMachineStateTransitionResult();
-        /**
-        * @brief undefinedStateCallback
-        * @details Gives an information whether desired state is valid.
-        */
+
+        /** @brief Gives an information whether desired state is valid. */
         void undefinedStateCallback();
 
-        // methods for SM
+        /**
+        * @brief Requests a state transition for SM FunctionGroup.
+        * @param[in] FunctionGroupStateType - FunctionGroupState to be set
+        * @return error code
+        */
+        ExecErrc SmSetState(sm::FunctionGroupStateType smState);
 
         /**
-        * @brief CoreSetState
-        * @details Request a state transition for Core FunctionGroup.
-        * @param[in] FunctionGroupStateType - FunctionGroupState to be set
+        * @brief Gets requested SM state.
+        * @return Requested SM state.
         */
-        void CoreSetState(sm::FunctionGroupStateType);
+        sm::FunctionGroupStateType SmGetState();
+
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "NotImplementedFunctions"
+
         /**
-        * @brief ComSetState
-        * @details Request a state transition for Com FunctionGroup.
-        * @param[in] FunctionGroupStateType - FunctionGroupState to be set
+        * @brief Requests a state transition for MachineFG.
+        * @details Will be mocked for tests.
+        * @param[in] machineState - new machine state
+        * @return error code
         */
-        void ComSetState(sm::FunctionGroupStateType);
+        ExecErrc MachineSetState(sm::MachineStateType machineState);
+
         /**
-        * @brief CryptoSetState
-        * @details Request a state transition for Crypto FunctionGroup.
-        * @param[in] FunctionGroupStateType - FunctionGroupState to be set
+        * @brief Request a state transition for given Function Group.
+        * @details This function will be mocked for tests.
+        * @param[in] fgName - name of the Function Group to be set.
+        * @param[in] fgState - FunctionGroupState to be set
+        * @return error code
         */
-        void CryptoSetState(sm::FunctionGroupStateType);
-        /**
-        * @brief DiagSetState
-        * @details Request a state transition for Diag FunctionGroup.
-        * @param[in] FunctionGroupStateType - FunctionGroupState to be set
-        */
-        void DiagSetState(sm::FunctionGroupStateType);
-        /**
-        * @brief ExecSetState
-        * @details Request a state transition for Exec FunctionGroup.
-        * @param[in] FunctionGroupStateType - FunctionGroupState to be set
-        */
-        void ExecSetState(sm::FunctionGroupStateType);
-        /**
-        * @brief FwSetState
-        * @details Request a state transition for Fw FunctionGroup.
-        * @param[in] FunctionGroupStateType - FunctionGroupState to be set
-        */
-        void FwSetState(sm::FunctionGroupStateType);
-        /**
-        * @brief IamSetState
-        * @details Request a state transition for Iam FunctionGroup.
-        * @param[in] FunctionGroupStateType - FunctionGroupState to be set
-        */
-        void IamSetState(sm::FunctionGroupStateType);
-        /**
-        * @brief IdsmSetState
-        * @details Request a state transition for Idsm FunctionGroup.
-        * @param[in] FunctionGroupStateType - FunctionGroupState to be set
-        */
-        void IdsmSetState(sm::FunctionGroupStateType);
-        /**
-        * @brief LogSetState
-        * @details Request a state transition for Log FunctionGroup.
-        * @param[in] FunctionGroupStateType - FunctionGroupState to be set
-        */
-        void LogSetState(sm::FunctionGroupStateType);
-        /**
-        * @brief NmSetState
-        * @details Request a state transition for Nm FunctionGroup.
-        * @param[in] FunctionGroupStateType - FunctionGroupState to be set
-        */
-        void NmSetState(sm::FunctionGroupStateType);
-        /**
-        * @brief NaSetState
-        * @details Request a state transition for N/a FunctionGroup.
-        * @param[in] FunctionGroupStateType - FunctionGroupState to be set
-        */
-        void NaSetState(sm::FunctionGroupStateType);
-        /**
-        * @brief PerSetState
-        * @details Request a state transition for Per FunctionGroup.
-        * @param[in] FunctionGroupStateType - FunctionGroupState to be set
-        */
-        void PerSetState(sm::FunctionGroupStateType);
-        /**
-        * @brief PhmSetState
-        * @details Request a state transition for Phm FunctionGroup.
-        * @param[in] FunctionGroupStateType - FunctionGroupState to be set
-        */
-        void PhmSetState(sm::FunctionGroupStateType);
-        /**
-        * @brief SmSetState
-        * @details Request a state transition for Sm FunctionGroup.
-        * @param[in] FunctionGroupStateType - FunctionGroupState to be set
-        */
-        void SmSetState(sm::FunctionGroupStateType);
-        /**
-        * @brief TsyncSetState
-        * @details Request a state transition for Tsync FunctionGroup.
-        * @param[in] FunctionGroupStateType - FunctionGroupState to be set
-        */
-        void TsyncSetState(sm::FunctionGroupStateType);
-        /**
-        * @brief UcmSetState
-        * @details Request a state transition for Ucm FunctionGroup.
-        * @param[in] FunctionGroupStateType - FunctionGroupState to be set
-        */
-        void UcmSetState(sm::FunctionGroupStateType);
+        ExecErrc SetState(std::string fgName, sm::FunctionGroupStateType fgState);
+#pragma clang diagnostic pop
+
     };
 }
 

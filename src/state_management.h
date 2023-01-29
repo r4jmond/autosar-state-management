@@ -26,8 +26,8 @@ namespace ara::sm {
         /** @brief Fills [SWS_SM_00021] */
         com::TriggerIn triggerIn;
         com::TriggerInOut triggerInOut;
-        SMStateType internalState = SMStateType::Off;
-        exec::StateClient* stateClient = nullptr;
+        FunctionGroupStateType internalState;
+        exec::StateClient* stateClient;
     private:
         bool killFlag;
         void Worker();

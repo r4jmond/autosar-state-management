@@ -10,12 +10,14 @@ namespace ara::com {
 /** @brief Fills [SWS_SM_91008] */
     class TriggerOut {
     public:
-        sm::SMStateType GetNotifier() const;
+        TriggerOut() : notifier{sm::FunctionGroupStateType::Off} {}
 
-        void SetNotifier(sm::SMStateType);
+        [[nodiscard]] sm::FunctionGroupStateType GetNotifier() const;
+
+        void SetNotifier(sm::FunctionGroupStateType);
 
     private:
-        sm::SMStateType notifier;
+        sm::FunctionGroupStateType notifier;
     };
 }
 #endif //AUTOSAR_STATE_MANAGEMENT_TRIGGER_OUT_H
