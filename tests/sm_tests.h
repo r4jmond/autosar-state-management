@@ -7,7 +7,6 @@
 #include <thread>
 #include "state_management.h"
 #include "state_client.h"
-#include "recovery_action.h"
 #include "sm_types.h"
 #include "gtest/gtest.h"
 

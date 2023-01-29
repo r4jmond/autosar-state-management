@@ -17,7 +17,10 @@ set(SRCS
         network_handle.h
         state_client.h
         sm_types.h
-        state_client.cpp)
+        state_client.cpp
+        power_mode.cpp
+        power_mode.h
+        communication_group_server.h)
 
 add_library(Autosar_SM ${SRCS})
 target_include_directories(Autosar_SM PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

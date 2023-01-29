@@ -11,7 +11,6 @@
 #include "network_handle.h"
 #include "state_client.h"
 #include "recovery_action.h"
-#include "power_mode.h"
 #include "communication_group_server.h"
 
 namespace ara::sm {
@@ -44,7 +43,8 @@ namespace ara::sm {
                                                         FunctionGroupNameType::phm,
                                                         FunctionGroupNameType::diag,
                                                         FunctionGroupNameType::ucm,
-                                                        FunctionGroupNameType::nm };
+                                                        FunctionGroupNameType::nm,
+                                                        FunctionGroupNameType::com};
     };
 }
 
