@@ -29,38 +29,46 @@ namespace ara::exec {
                 : initialMachineStateTransitionResult(false),
                   requestedSMState(sm::FunctionGroupStateType::Off) {}
 
-        /**
-        * @brief GetInitialMachineStateTransitionResult
-        * @details Retrieve the result of AUTOSAR Adaptive Platform initial transition to Startup state.
-        */
+        /** @brief Retrieve the result of AUTOSAR Adaptive Platform initial transition to Startup state. */
         void GetInitialMachineStateTransitionResult();
-        /**
-        * @brief undefinedStateCallback
-        * @details Gives an information whether desired state is valid.
-        */
+
+        /** @brief Gives an information whether desired state is valid. */
         void undefinedStateCallback();
 
         /**
-        * @brief SmSetState
-        * @details Requests a state transition for SM FunctionGroup.
+        * @brief Requests a state transition for SM FunctionGroup.
         * @param[in] FunctionGroupStateType - FunctionGroupState to be set
         * @return error code
         */
         ExecErrc SmSetState(sm::FunctionGroupStateType smState);
+
         /**
         * @brief Gets requested SM state.
         * @return Requested SM state.
         */
         sm::FunctionGroupStateType SmGetState();
 
+#pragma clang diagnostic push
+#pragma ide diagnostic ignored "NotImplementedFunctions"
+
         /**
-        * @brief SetState
-        * @details Request a state transition for given Function Group..
+        * @brief Requests a state transition for MachineFG.
+        * @details Will be mocked for tests.
+        * @param[in] machineState - new machine state
+        * @return error code
+        */
+        ExecErrc MachineSetState(sm::MachineStateType machineState);
+
+        /**
+        * @brief Request a state transition for given Function Group.
+        * @details This function will be mocked for tests.
         * @param[in] fgName - name of the Function Group to be set.
         * @param[in] fgState - FunctionGroupState to be set
         * @return error code
         */
         ExecErrc SetState(std::string fgName, sm::FunctionGroupStateType fgState);
+#pragma clang diagnostic pop
+
     };
 }
 

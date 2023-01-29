@@ -7,6 +7,7 @@ namespace ara::exec {
     class MockStateClient : public StateClient {
     public:
         MOCK_METHOD(ExecErrc, SetState, (std::string fgName, sm::FunctionGroupStateType fgState));
+        MOCK_METHOD(ExecErrc, MachineSetState, (sm::MachineStateType machineState));
     };
 }
 
@@ -16,7 +17,8 @@ TEST_F(smTests, testComSetState)
     ara::exec::MockStateClient MyStateClient;
     EXPECT_CALL(MyStateClient, SetState(ara::sm::FunctionGroupNameType::com,
                                         ara::sm::FunctionGroupStateType::Off));
-    MyStateClient.SetState(ara::sm::FunctionGroupNameType::com, ara::sm::FunctionGroupStateType::Off);
+    MyStateClient.SetState(ara::sm::FunctionGroupNameType::com,
+                           ara::sm::FunctionGroupStateType::Off);
 }
 
 TEST_F(smTests, testSMSetStateOn)
