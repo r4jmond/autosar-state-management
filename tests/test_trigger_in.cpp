@@ -2,8 +2,8 @@
 
 /** @brief Fills [SWS_SM_00021] */
 TEST_F(smTests, testInternalStateInfluence) {
-    mySM.triggerIn.SetTrigger(ara::sm::SMStateType::Off);
-    EXPECT_EQ(mySM.triggerIn.GetDesiredState(), ara::sm::SMStateType::Off);
+    mySM.triggerIn.SetTrigger(ara::sm::FunctionGroupStateType::Off);
+    EXPECT_EQ(mySM.triggerIn.GetDesiredState(), ara::sm::FunctionGroupStateType::Off);
     EXPECT_TRUE(mySM.triggerIn.IsTrigger());
     // let changes to be applied
     using namespace std::chrono_literals;

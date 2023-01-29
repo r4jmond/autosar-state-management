@@ -1,12 +1,12 @@
 #include "trigger_out.h"
 
 namespace ara::com {
-
-    sm::SMStateType TriggerOut::GetNotifier() const {
+    
+    sm::FunctionGroupStateType TriggerOut::GetNotifier() const {
         return notifier;
     }
 
-    void TriggerOut::SetNotifier(sm::SMStateType newNotifier) {
+    void TriggerOut::SetNotifier(sm::FunctionGroupStateType newNotifier) {
         notifier = newNotifier;
     }
 

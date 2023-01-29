@@ -2,7 +2,7 @@
 
 namespace ara::com {
 
-    void TriggerIn::SetTrigger(sm::SMStateType newTrigger) {
+    void TriggerIn::SetTrigger(sm::FunctionGroupStateType newTrigger) {
         trigger.desiredSMState = newTrigger;
         trigger.isNewTrigger = true;
     }
@@ -15,7 +15,7 @@ namespace ara::com {
         trigger.isNewTrigger = false;
     }
 
-    sm::SMStateType TriggerIn::GetDesiredState() const {
+    sm::FunctionGroupStateType TriggerIn::GetDesiredState() const {
         return trigger.desiredSMState;
     }
 }

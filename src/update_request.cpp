@@ -1,82 +1,79 @@
 #include "update_request.h"
 
-namespace ara { namespace com {
-    UpdateRequest::UpdateRequest() : resetRequest{false}, resetAccepted{false},
-                                     updateRequest{false}, updateSession {false},
-                                     updateAccepted {false} {}
+namespace ara::com {
+    UpdateRequest::UpdateRequest() :
+        requestMsg {false, RequestType::kResetMachine},
+        updateStatus {sm::ErrorType::kSuccess},
+        updateSession {false} {}
 
     sm::ErrorType UpdateRequest::ResetMachine() {
-        /* set resetRequest */
-        resetRequest = true;
-        /* wait for State management to clear resetRequest */
-        while (resetRequest) {}
-        /* SM sets resetAccepted after reading resetRequest */
-        return resetAccepted ? sm::ErrorType::kSuccess : sm::ErrorType::kRejected;
+        return SendRequest(RequestType::kResetMachine);
     }
+
     sm::ErrorType UpdateRequest::StopUpdateSession() {
-        if (updateSession) {
-            updateSession = false;
-            return sm::ErrorType::kSuccess;
-        }
-        else {
-            return sm::ErrorType::kRejected;
-        }
+        return SendRequest(RequestType::kStopUpdateSession);
     }
+
     sm::ErrorType UpdateRequest::RequestUpdateSession() {
+        return SendRequest(RequestType::kRequestUpdateSession);
+    }
+    
+    sm::ErrorType UpdateRequest::PrepareUpdate(sm::FunctionGroupListType const &functionGroupList) {
         if (updateSession) {
-            return sm::ErrorType::kNotAllowedMultipleUpdateSessions;
+            UpdateRequest::functionGroupListToSM = functionGroupList;
+            return SendRequest(RequestType::kPrepareUpdate);
         }
         else {
-            updateRequest = true;
-            while (updateRequest) {}
-            return updateAccepted ? sm::ErrorType::kSuccess : sm::ErrorType::kRejected;
-        }
-    }
-    sm::ErrorType UpdateRequest::PrepareUpdate(sm::FunctionGroupListType functionGroupList) {
-        if (!updateSession) {
             return sm::ErrorType::kRejected;
         }
+    }
+
+    sm::ErrorType UpdateRequest::VerifyUpdate(sm::FunctionGroupListType const &functionGroupList) {
+        if (updateSession) {
+            UpdateRequest::functionGroupListToSM = functionGroupList;
+            return SendRequest(RequestType::kVerifyUpdate);
+        }
         else {
-            UpdateRequest::functionGroupList = functionGroupList;
-            updateRequest = true;
-            while (updateRequest) {}
-            return errorCode;
+            return sm::ErrorType::kRejected;
         }
     }
 
-    bool UpdateRequest::IsResetRequest() const {
-        return resetRequest;
-    }
-    void UpdateRequest::SetResetRequest(bool newResetRequest) {
-        UpdateRequest::resetRequest = newResetRequest;
+    sm::ErrorType UpdateRequest::PrepareRollback(sm::FunctionGroupListType const &functionGroupList) {
+        UpdateRequest::functionGroupListToSM = functionGroupList;
+        return SendRequest(RequestType::kPrepareRollback);
     }
 
-    void UpdateRequest::SetResetAccepted(bool isResetAccepted) {
-        UpdateRequest::resetAccepted = isResetAccepted;
+    void UpdateRequest::SendResponse(sm::ErrorType newUpdateStatus) {
+        UpdateRequest::updateStatus = newUpdateStatus;
+        requestMsg.status = false;
     }
 
+    UpdateRequest::RequestMsg &UpdateRequest::GetRequestMsg() {
+        return UpdateRequest::requestMsg;
+    }
 
-    bool UpdateRequest::IsUpdateRequest() const {
-        return updateRequest;
+    sm::ErrorType UpdateRequest::SendRequest(UpdateRequest::RequestType requestType) {
+        /* Set request flag to true */
+        UpdateRequest::requestMsg.type = requestType;
+        UpdateRequest::requestMsg.status = true;
+        /* Wait for SM to clear smRequest flag */
+        while(UpdateRequest::requestMsg.status) {}
+        /* return smResponse set by SM */
+        return updateStatus;
     }
-    void UpdateRequest::SetUpdateRequest(bool newUpdateRequest) {
-        UpdateRequest::updateRequest = newUpdateRequest;
+    const sm::FunctionGroupListType &UpdateRequest::GetFunctionGroupList() const {
+        return functionGroupListToSM;
     }
+
     bool UpdateRequest::IsUpdateSession() const {
         return updateSession;
     }
+
     void UpdateRequest::SetUpdateSession(bool newUpdateSession) {
         UpdateRequest::updateSession = newUpdateSession;
     }
-    void UpdateRequest::SetUpdateAccepted(bool isUpdateAccepted) {
-        UpdateRequest::updateAccepted = isUpdateAccepted;
-    }
 
-    const sm::FunctionGroupListType &UpdateRequest::GetFunctionGroupList() const {
-        return functionGroupList;
+    sm::ErrorType UpdateRequest::GetUpdateStatus() const {
+        return updateStatus;
     }
-
-//    void UpdateRequest::SetErrorCode(sm::ErrorType errorCode) {
-//        UpdateRequest::errorCode = errorCode;
-//    }
-}}
+}

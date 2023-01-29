@@ -15,10 +15,11 @@ set(SRCS
         trigger_in_out.h
         network_handle.cpp
         network_handle.h
-        state_client.h
         sm_types.h
-        state_client.cpp
-        execution_client.h)
+        execution_client.h
+        contains.h
+        state_client.h
+        state_client.cpp)
 
 add_library(Autosar_SM ${SRCS})
 target_include_directories(Autosar_SM PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
