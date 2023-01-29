@@ -14,8 +14,11 @@ namespace ara {
 
         template<typename errorHandler>
         bool RecoveryAction<errorHandler>::recoveryActionHandler(errorHandler *errorRecovery){
+            bool tempErrorOcurred;
             *errorRecovery = handler;
-            return this->errorOccurred;
+            tempErrorOcurred = errorOccurred;
+            this->errorOccurred = false;
+            return tempErrorOcurred;
         }
 
     } // ara
