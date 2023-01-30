@@ -60,7 +60,7 @@ namespace ara::exec {
         * @param[in] machineState - new machine state
         * @return error code
         */
-        ExecErrc MachineSetState(sm::MachineStateType machineState);
+        virtual ExecErrc MachineSetState(sm::MachineStateType machineState) = 0;
 
         /**
         * @brief Request a state transition for given Function Group.

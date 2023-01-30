@@ -40,11 +40,11 @@ TEST_F(smTests, testSMSetStateUndefined)
     EXPECT_EQ(mySM.internalState, ara::sm::FunctionGroupStateType::Off);
 }
 
-TEST_F(smTests, testInitialStateTransitionResult)
+TEST_F(smTests, testInitialStateTransitionResultSuccess)
 {
-    mySM.stateClient->SmSetState(ara::sm::FunctionGroupStateType::On);
+    mySM.stateClient->SetInitialMachineStateTransitionResult(ara::sm::ErrorType::kSuccess);
     // let changes to be applied
     using namespace std::chrono_literals;
     std::this_thread::sleep_for(500ms);
-    EXPECT_EQ(mySM.stateClient->GetInitialMachineStateTransitionResult(), ara::sm::ErrorType::kSuccess);
+    EXPECT_EQ(mySM.internalState, ara::sm::FunctionGroupStateType::On);
 }
