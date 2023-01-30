@@ -43,7 +43,9 @@ namespace ara::sm {
         void TriggerInHandler();
         /** @brief Function handling TriggerInOut */
         void TriggerInOutHandler();
-        /** @brief Function Updating SM State on EM request */
+        /** @brief Function Updating SM State on EM request
+        * @details It also reports it's internal state to EM
+        */
         void UpdateSMState();
 
         /** @brief Checks for Update Requests and handles them */

@@ -60,7 +60,6 @@ namespace ara::sm {
         if (executionClient != nullptr) {
             executionClient->ReportApplicationState(internalState);
         }
-        triggerOut.SetNotifier(internalState);
     }
 
     void StateManagement::UpdateRequestHandler() {
