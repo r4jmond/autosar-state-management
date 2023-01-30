@@ -23,7 +23,7 @@ namespace ara::sm {
                 On_Actions();
             }
             else if (internalState == FunctionGroupStateType::Update) {
-                //do stuff
+                UpdateRequestHandlerUpdate();
             }
             UpdateSMState();
         }
@@ -31,13 +31,13 @@ namespace ara::sm {
     }
 
     void StateManagement::On_Actions() {
-        UpdateRequestHandler();
+        UpdateRequestHandlerOn();
         TriggerInHandler();
         TriggerInOutHandler();
     }
 
     void StateManagement::Off_Actions() {
-        UpdateRequestHandler();
+        UpdateRequestHandlerOff();
         TriggerInHandler();
         TriggerInOutHandler();
     }
@@ -73,56 +73,93 @@ namespace ara::sm {
         triggerOut.SetNotifier(internalState);
     }
 
-    void StateManagement::UpdateRequestHandler() {
+
+    void StateManagement::UpdateRequestHandlerOff() {
         com::UpdateRequest::RequestMsg requestMsg =  myUpdateRequest.GetRequestMsg();
         if (requestMsg.status) {
             ErrorType newUpdateStatus;
             switch (requestMsg.type) {
                 case com::UpdateRequest::RequestType::kRequestUpdateSession:
-                    if (myUpdateRequest.IsUpdateSession()) {
-                        newUpdateStatus = ErrorType::kNotAllowedMultipleUpdateSessions;
-                    }
-                    else {
-                        myUpdateRequest.SetUpdateSession(true);
-                        newUpdateStatus = ErrorType::kSuccess;
-                    }
-                    break;
+                    /* intentional fallback */
+                case com::UpdateRequest::RequestType::kResetMachine:
+                    /* intentional fallback */
                 case com::UpdateRequest::RequestType::kStopUpdateSession:
-                    if (myUpdateRequest.IsUpdateSession()) {
-                        myUpdateRequest.SetUpdateSession(false);
-                        newUpdateStatus = ErrorType::kSuccess;
-                    }
-                    else {
-                        newUpdateStatus = ErrorType::kRejected;
-                    }
+                    /* intentional fallback */
+                case com::UpdateRequest::RequestType::kPrepareUpdate:
+                    /* intentional fallback */
+                case com::UpdateRequest::RequestType::kVerifyUpdate:
+                    /* intentional fallback */
+                case com::UpdateRequest::RequestType::kPrepareRollback:
+                    newUpdateStatus = ErrorType::kRejected;
+                    break;
+                default:
+                    newUpdateStatus = ErrorType::kInvalidValue;
+                    break;
+            }
+            myUpdateRequest.SendResponse(newUpdateStatus);
+        }
+    }
+
+    void StateManagement::UpdateRequestHandlerOn() {
+        com::UpdateRequest::RequestMsg requestMsg =  myUpdateRequest.GetRequestMsg();
+        if (requestMsg.status) {
+            ErrorType newUpdateStatus;
+            switch (requestMsg.type) {
+                case com::UpdateRequest::RequestType::kRequestUpdateSession:
+                    exec::ExecErrc setStateError;
+                    setStateError = stateClient->SmSetState(FunctionGroupStateType::Update);
+                    newUpdateStatus = (setStateError == exec::ExecErrc::kSuccess) ?
+                                      ErrorType::kSuccess : ErrorType::kFailed;
                     break;
                 case com::UpdateRequest::RequestType::kResetMachine:
-                    if (myUpdateRequest.IsUpdateSession()) {
+                    /* intentional fallback */
+                case com::UpdateRequest::RequestType::kStopUpdateSession:
+                    /* intentional fallback */
+                case com::UpdateRequest::RequestType::kPrepareUpdate:
+                    /* intentional fallback */
+                case com::UpdateRequest::RequestType::kVerifyUpdate:
+                    /* intentional fallback */
+                case com::UpdateRequest::RequestType::kPrepareRollback:
+                    newUpdateStatus = ErrorType::kRejected;
+                    break;
+                default:
+                    newUpdateStatus = ErrorType::kInvalidValue;
+                    break;
+            }
+            myUpdateRequest.SendResponse(newUpdateStatus);
+        }
+    }
+
+    void StateManagement::UpdateRequestHandlerUpdate() {
+        com::UpdateRequest::RequestMsg requestMsg =  myUpdateRequest.GetRequestMsg();
+        if (requestMsg.status) {
+            ErrorType newUpdateStatus;
+            switch (requestMsg.type) {
+                case com::UpdateRequest::RequestType::kRequestUpdateSession:
+                    newUpdateStatus = ErrorType::kNotAllowedMultipleUpdateSessions;
+                    break;
+                case com::UpdateRequest::RequestType::kStopUpdateSession:
+                    exec::ExecErrc setStateError;
+                    setStateError = stateClient->SmSetState(FunctionGroupStateType::Update);
+                    newUpdateStatus = (setStateError == exec::ExecErrc::kSuccess) ?
+                                      ErrorType::kSuccess : ErrorType::kFailed;
+                    break;
+                case com::UpdateRequest::RequestType::kResetMachine:
                         // todo persist all information within the machine
                         // todo reset machine
                         newUpdateStatus = ErrorType::kSuccess;
-                    }
-                    else {
-                        newUpdateStatus = ErrorType::kRejected;
-                    }
                     break;
                 case com::UpdateRequest::RequestType::kPrepareUpdate:
-                    if (myUpdateRequest.IsUpdateSession()) {
-                        if (CheckFunctionGroupList(myUpdateRequest.GetFunctionGroupList())) {
-                            //todo prepare update
-                            newUpdateStatus = ErrorType::kSuccess;
-                        }
-                        else {
-                            newUpdateStatus = ErrorType::kFailed;
-                        }
+                    if (CheckFunctionGroupList(myUpdateRequest.GetFunctionGroupList())) {
+                        //todo prepare update
+                        newUpdateStatus = ErrorType::kSuccess;
                     }
                     else {
                         newUpdateStatus = ErrorType::kRejected;
                     }
                     break;
                 case com::UpdateRequest::RequestType::kVerifyUpdate:
-                    if ((myUpdateRequest.IsUpdateSession()) &&
-                        (myUpdateRequest.GetUpdateStatus() == ErrorType::kSuccess)) {
+                    if (myUpdateRequest.GetUpdateStatus() == ErrorType::kSuccess) {
                         if (CheckFunctionGroupList(myUpdateRequest.GetFunctionGroupList())) {
                             //todo verify update
                             newUpdateStatus = ErrorType::kSuccess;
@@ -135,8 +172,7 @@ namespace ara::sm {
                     }
                     break;
                 case com::UpdateRequest::RequestType::kPrepareRollback:
-                    if ((myUpdateRequest.IsUpdateSession()) &&
-                        (myUpdateRequest.GetUpdateStatus() == ErrorType::kFailed)) {
+                    if (myUpdateRequest.GetUpdateStatus() == ErrorType::kFailed) {
                         if (CheckFunctionGroupList(myUpdateRequest.GetFunctionGroupList())) {
                             //todo prepare rollback
                             newUpdateStatus = ErrorType::kSuccess;
@@ -148,7 +184,6 @@ namespace ara::sm {
                         newUpdateStatus = ErrorType::kRejected;
                     }
             }
-
             myUpdateRequest.SendResponse(newUpdateStatus);
         }
     }

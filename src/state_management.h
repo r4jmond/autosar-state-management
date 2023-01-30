@@ -48,8 +48,20 @@ namespace ara::sm {
         */
         void UpdateSMState();
 
-        /** @brief Checks for Update Requests and handles them */
-        void UpdateRequestHandler();
+        /** @brief Checks for Update Requests and handles them
+         *  @details Should work in 'On' SM state.
+         *  Handles request: RequestUpdateSession */
+        void UpdateRequestHandlerOn();
+
+        /** @brief Checks for Update Requests and handles them
+         *  @details Should work in 'Off' SM state.
+         *  Rejects all requests as in Off state updates are not allowed. */
+        void UpdateRequestHandlerOff();
+
+        /** @brief Checks for Update Requests and handles them
+         *  @details Should work in 'Update' SM state.
+         *  Handles all requests. */
+        void UpdateRequestHandlerUpdate();
 
         /** @brief Checks if given FunctionGroupList is valid
          * @param fgList - FunctionGroupList to be checked.

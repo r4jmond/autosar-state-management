@@ -110,16 +110,6 @@ namespace ara::com {
         void SendResponse(sm::ErrorType newUpdateStatus);
 
     private:
-        /** @brief Update Session status set by SM */
-        bool updateSession;
-    public:
-        /** @brief updateSession getter used by SM.
-         *  @return bool updateSession. */
-        [[nodiscard]] bool IsUpdateSession() const;
-        /** @brief updateSession setter used by SM. */
-        void SetUpdateSession(bool newUpdateSession);
-
-    private:
         /** @brief list being used by SM and set by PrepareUpdate/VerifyUpdate/PrepareRollback functions */
         ara::sm::FunctionGroupListType functionGroupListToSM;
     public:

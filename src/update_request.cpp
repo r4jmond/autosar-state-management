@@ -3,8 +3,7 @@
 namespace ara::com {
     UpdateRequest::UpdateRequest() :
         requestMsg {false, RequestType::kResetMachine},
-        updateStatus {sm::ErrorType::kSuccess},
-        updateSession {false} {}
+        updateStatus {sm::ErrorType::kSuccess}{}
 
     sm::ErrorType UpdateRequest::ResetMachine() {
         return SendRequest(RequestType::kResetMachine);
@@ -19,23 +18,13 @@ namespace ara::com {
     }
     
     sm::ErrorType UpdateRequest::PrepareUpdate(sm::FunctionGroupListType const &functionGroupList) {
-        if (updateSession) {
-            UpdateRequest::functionGroupListToSM = functionGroupList;
-            return SendRequest(RequestType::kPrepareUpdate);
-        }
-        else {
-            return sm::ErrorType::kRejected;
-        }
+        UpdateRequest::functionGroupListToSM = functionGroupList;
+        return SendRequest(RequestType::kPrepareUpdate);
     }
 
     sm::ErrorType UpdateRequest::VerifyUpdate(sm::FunctionGroupListType const &functionGroupList) {
-        if (updateSession) {
-            UpdateRequest::functionGroupListToSM = functionGroupList;
-            return SendRequest(RequestType::kVerifyUpdate);
-        }
-        else {
-            return sm::ErrorType::kRejected;
-        }
+        UpdateRequest::functionGroupListToSM = functionGroupList;
+        return SendRequest(RequestType::kVerifyUpdate);
     }
 
     sm::ErrorType UpdateRequest::PrepareRollback(sm::FunctionGroupListType const &functionGroupList) {
@@ -63,14 +52,6 @@ namespace ara::com {
     }
     const sm::FunctionGroupListType &UpdateRequest::GetFunctionGroupList() const {
         return functionGroupListToSM;
-    }
-
-    bool UpdateRequest::IsUpdateSession() const {
-        return updateSession;
-    }
-
-    void UpdateRequest::SetUpdateSession(bool newUpdateSession) {
-        UpdateRequest::updateSession = newUpdateSession;
     }
 
     sm::ErrorType UpdateRequest::GetUpdateStatus() const {

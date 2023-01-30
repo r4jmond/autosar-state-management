@@ -3,7 +3,9 @@
 namespace ara::exec {
 
     ExecErrc StateClient::SmSetState(sm::FunctionGroupStateType requestedState) {
-        if ((requestedState == sm::FunctionGroupStateType::On) || (requestedState == sm::FunctionGroupStateType::Off)) {
+        if ((requestedState == sm::FunctionGroupStateType::On) ||
+            (requestedState == sm::FunctionGroupStateType::Off) ||
+            (requestedState == sm::FunctionGroupStateType::Update)) {
             requestedSMState = requestedState;
             return ExecErrc::kSuccess;
         } else {
