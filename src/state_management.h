@@ -10,6 +10,7 @@
 #include "trigger_out.h"
 #include "network_handle.h"
 #include "state_client.h"
+#include "ecu_reset_request.h"
 
 namespace ara::sm {
     /** @brief Class StateManagement to be used by Update and Configuration Management.
@@ -30,9 +31,13 @@ namespace ara::sm {
         com::TriggerInOut triggerInOut;
         FunctionGroupStateType internalState;
         exec::StateClient* stateClient;
+        dia::EcuResetRequest ecuResetRequest;
+        bool GetShutdownFlag() const;
     private:
         /** @brief SM kill flag */
         bool killFlag;
+        /** @brief Rapid shutdown flag */
+        bool rapidShutdownFlag;
         /** @brief Function handling SM 'On' State operations */
         void On_Actions();
         /** @brief Function handling SM 'Off' State operations */
@@ -46,6 +51,9 @@ namespace ara::sm {
 
         /** @brief Checks for Update Requests and handles them */
         void UpdateRequestHandler();
+
+        /** @brief Checks for ECU Reset Requests and handles them */
+        void EcuResetRequestHandler();
 
         /** @brief Checks if given FunctionGroupList is valid
          * @param fgList - FunctionGroupList to be checked.

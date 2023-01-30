@@ -25,6 +25,7 @@ namespace ara::sm {
     }
 
     void StateManagement::On_Actions() {
+        EcuResetRequestHandler();
         UpdateRequestHandler();
         TriggerInHandler();
         TriggerInOutHandler();
@@ -32,6 +33,7 @@ namespace ara::sm {
     }
 
     void StateManagement::Off_Actions() {
+        EcuResetRequestHandler();
         UpdateRequestHandler();
         TriggerInHandler();
         TriggerInOutHandler();
@@ -145,6 +147,35 @@ namespace ara::sm {
         }
     }
 
+    void StateManagement::EcuResetRequestHandler() {
+        if (ecuResetRequest.GetRequestMsg().status) {
+            switch (ecuResetRequest.GetRequestMsg().type) {
+                case dia::EcuResetRequest::RequestType::kEnableRapidShutdown:
+                    rapidShutdownFlag = true;
+                    break;
+                case dia::EcuResetRequest::RequestType::kDisableRapidShutdown:
+                    rapidShutdownFlag = false;
+                    break;
+                case dia::EcuResetRequest::RequestType::kExecuteReset:
+                    stateClient->MachineSetState(MachineStateType::Restart);
+                    break;
+                case dia::EcuResetRequest::RequestType::kRequestReset:
+                    // todo notify all processes about restart
+                    if (!rapidShutdownFlag) {
+                        //todo wait for response from function groups
+                    }
+                    stateClient->MachineSetState(MachineStateType::Restart);
+                    break;
+                case dia::EcuResetRequest::RequestType::kKeyOffOnReset:
+                    // todo set al function groups to off and then to on
+                    break;
+                default:
+                    break;
+            }
+            ecuResetRequest.DiscardRequest();
+        }
+    }
+
     bool StateManagement::CheckFunctionGroupList(FunctionGroupListType const &fgList) {
 
         std::vector<std::string> functionGroupListVec = std::ref(functionGroupList);
@@ -157,6 +188,10 @@ namespace ara::sm {
         killFlag = true;
     }
 
+    bool StateManagement::GetShutdownFlag() const {
+        return rapidShutdownFlag;
+    }
+
     StateManagement::StateManagement(exec::StateClient* sc) :
         myUpdateRequest{com::UpdateRequest()},
         myNetworkHandle{com::NetworkHandle()},
@@ -165,5 +200,6 @@ namespace ara::sm {
         triggerInOut{com::TriggerInOut()},
         internalState{FunctionGroupStateType::Off},
         stateClient{sc},
+        ecuResetRequest{dia::EcuResetRequest()},
         killFlag{false} {}
 }
