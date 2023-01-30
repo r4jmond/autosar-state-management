@@ -17,13 +17,11 @@
  */
 class smTests : public testing::Test {
 protected:
-    ara::exec::StateClient mySC;
     testing::NiceMock<ara::exec::MockExecutionClient> myEC;
     testing::NiceMock<ara::exec::MockStateClient> mySC;
     ara::sm::StateManagement mySM;
     std::thread smThread;
-    smTests() : mySC{ara::exec::StateClient()},
-                mySM{ara::sm::StateManagement(&mySC, &myEC)} {
+    smTests() : mySM{ara::sm::StateManagement(&mySC, &myEC)} {
         smThread = std::thread(&ara::sm::StateManagement::Work, &mySM);
     }
     ~smTests() override {

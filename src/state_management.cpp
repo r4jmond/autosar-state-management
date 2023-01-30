@@ -6,20 +6,26 @@ namespace ara::sm {
 
     void StateManagement::Work() {
         std::cout << "Starting work" << std::endl;
+        /** @brief Start-up Sequence - Figure 7.1 SWS_StateManagement */
         if (stateClient != nullptr) {
             if (stateClient->GetInitialMachineStateTransitionResult() == ErrorType::kSuccess) {
                 stateClient->SmSetState(FunctionGroupStateType::On);
             }
+            /* Restart machine if Initial MachineState Transition not successful */
             else stateClient->MachineSetState(MachineStateType::Restart);
         }
+
         while (!killFlag) {
             if (internalState == FunctionGroupStateType::Off) {
-                On_Actions();
-            }
-            else if (internalState == FunctionGroupStateType::On) {
                 Off_Actions();
             }
-            triggerOut.SetNotifier(internalState);
+            else if (internalState == FunctionGroupStateType::On) {
+                On_Actions();
+            }
+            else if (internalState == FunctionGroupStateType::Update) {
+                //do stuff
+            }
+            UpdateSMState();
         }
         std::cout << "Finished work" << std::endl;
     }
@@ -28,14 +34,12 @@ namespace ara::sm {
         UpdateRequestHandler();
         TriggerInHandler();
         TriggerInOutHandler();
-        UpdateSMState();
     }
 
     void StateManagement::Off_Actions() {
         UpdateRequestHandler();
         TriggerInHandler();
         TriggerInOutHandler();
-        UpdateSMState();
     }
 
     void StateManagement::TriggerInHandler() {
@@ -66,6 +70,7 @@ namespace ara::sm {
         if (executionClient != nullptr) {
             executionClient->ReportApplicationState(internalState);
         }
+        triggerOut.SetNotifier(internalState);
     }
 
     void StateManagement::UpdateRequestHandler() {
