@@ -215,14 +215,16 @@ namespace ara::sm {
                     stateClient->MachineSetState(MachineStateType::Restart);
                     break;
                 case dia::EcuResetRequest::RequestType::kRequestReset:
-                    // todo notify all processes about restart
+                    diagnosticReset.Message(DiagnosticResetMsg::SoftReset);
                     if (!rapidShutdownFlag) {
-                        //todo wait for response from function groups
+                        DiagnosticResetRespMsg response;
+                        diagnosticReset.TryGetDiagnosticResetMsgResponse(&response);
                     }
                     stateClient->MachineSetState(MachineStateType::Restart);
                     break;
                 case dia::EcuResetRequest::RequestType::kKeyOffOnReset:
-                    // todo set al function groups to off and then to on
+                    SetAllFunctionGroupsState(functionGroupList, FunctionGroupStateType::Off);
+                    SetAllFunctionGroupsState(functionGroupList, FunctionGroupStateType::On);
                     break;
                 default:
                     break;

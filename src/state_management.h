@@ -46,6 +46,8 @@ namespace ara::sm {
         bool rapidShutdownFlag;
         exec::ExecutionClient* executionClient;
 
+        DiagnosticReset diagnosticReset;
+
         /** @brief SM error occurred flag */
         bool errorOccurred;
         /** @brief String to store error message from phm */
