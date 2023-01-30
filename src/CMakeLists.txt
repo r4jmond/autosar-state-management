@@ -19,7 +19,13 @@ set(SRCS
         execution_client.h
         contains.h
         state_client.h
-        state_client.cpp)
+        state_client.cpp
+        recovery_action.h
+        power_mode.cpp
+        power_mode.h
+        communication_group_server.h
+        diagnostic_reset.cpp
+        diagnostic_reset.h)
 
 add_library(Autosar_SM ${SRCS})
 target_include_directories(Autosar_SM PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
