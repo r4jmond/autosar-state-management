@@ -191,5 +191,6 @@ namespace ara::sm {
         internalState{FunctionGroupStateType::Off},
         stateClient{sc},
         executionClient{ec},
-        killFlag{false} {}
+        killFlag{false},
+        errorOccurred{false} {}
 }
