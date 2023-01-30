@@ -122,6 +122,10 @@ TEST_F(smTests, testPersistSessionStatus) {
  *           ResetMachine to request a Machine reset.(RS_SM_00004) */
 TEST_F(smTests, testResetExecution)
 {
+    EXPECT_CALL(mySC,
+                MachineSetState(ara::sm::MachineStateType::Restart)
+                ).Times(testing::AnyNumber());
+
     /** Set SM to ON */
     mySC.SmSetState(ara::sm::FunctionGroupStateType::On);
     /** wait for the changes to propagate */

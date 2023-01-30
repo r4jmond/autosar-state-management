@@ -134,25 +134,32 @@ namespace ara::sm {
         com::UpdateRequest::RequestMsg requestMsg =  myUpdateRequest.GetRequestMsg();
         if (requestMsg.status) {
             ErrorType newUpdateStatus;
+            exec::ExecErrc setStateError;
             switch (requestMsg.type) {
                 case com::UpdateRequest::RequestType::kRequestUpdateSession:
                     newUpdateStatus = ErrorType::kNotAllowedMultipleUpdateSessions;
                     break;
                 case com::UpdateRequest::RequestType::kStopUpdateSession:
-                    exec::ExecErrc setStateError;
                     if (stateClient != nullptr) {
                         setStateError = stateClient->SmSetState(FunctionGroupStateType::On);
+                        newUpdateStatus = (setStateError == exec::ExecErrc::kSuccess) ?
+                                          ErrorType::kSuccess : ErrorType::kFailed;
                     }
                     else {
-                        setStateError = exec::ExecErrc::kGeneralError;
+                        newUpdateStatus = ErrorType::kFailed;
                     }
-                    newUpdateStatus = (setStateError == exec::ExecErrc::kSuccess) ?
-                                      ErrorType::kSuccess : ErrorType::kFailed;
+
                     break;
                 case com::UpdateRequest::RequestType::kResetMachine:
                         // todo persist all information within the machine
-                        // todo reset machine
-                        newUpdateStatus = ErrorType::kSuccess;
+                        if (stateClient != nullptr) {
+                            setStateError = stateClient->MachineSetState(MachineStateType::Restart);
+                            newUpdateStatus = (setStateError == exec::ExecErrc::kSuccess) ?
+                                              ErrorType::kSuccess : ErrorType::kFailed;
+                        }
+                        else {
+                            newUpdateStatus = ErrorType::kFailed;
+                        }
                     break;
                 case com::UpdateRequest::RequestType::kPrepareUpdate:
                     if (CheckFunctionGroupList(myUpdateRequest.GetFunctionGroupList())) {
