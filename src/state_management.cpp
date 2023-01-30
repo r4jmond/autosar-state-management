@@ -31,12 +31,14 @@ namespace ara::sm {
     }
 
     void StateManagement::On_Actions() {
+        EcuResetRequestHandler();
         UpdateRequestHandlerOn();
         TriggerInHandler();
         TriggerInOutHandler();
     }
 
     void StateManagement::Off_Actions() {
+        EcuResetRequestHandler();
         UpdateRequestHandlerOff();
         TriggerInHandler();
         TriggerInOutHandler();
@@ -200,6 +202,37 @@ namespace ara::sm {
         }
     }
 
+    void StateManagement::EcuResetRequestHandler() {
+        if (ecuResetRequest.GetRequestMsg().status) {
+            switch (ecuResetRequest.GetRequestMsg().type) {
+                case dia::EcuResetRequest::RequestType::kEnableRapidShutdown:
+                    rapidShutdownFlag = true;
+                    break;
+                case dia::EcuResetRequest::RequestType::kDisableRapidShutdown:
+                    rapidShutdownFlag = false;
+                    break;
+                case dia::EcuResetRequest::RequestType::kExecuteReset:
+                    stateClient->MachineSetState(MachineStateType::Restart);
+                    break;
+                case dia::EcuResetRequest::RequestType::kRequestReset:
+                    diagnosticReset.Message(DiagnosticResetMsg::SoftReset);
+                    if (!rapidShutdownFlag) {
+                        DiagnosticResetRespMsg response;
+                        diagnosticReset.TryGetDiagnosticResetMsgResponse(&response);
+                    }
+                    stateClient->MachineSetState(MachineStateType::Restart);
+                    break;
+                case dia::EcuResetRequest::RequestType::kKeyOffOnReset:
+                    SetAllFunctionGroupsState(functionGroupList, FunctionGroupStateType::Off);
+                    SetAllFunctionGroupsState(functionGroupList, FunctionGroupStateType::On);
+                    break;
+                default:
+                    break;
+            }
+            ecuResetRequest.DiscardRequest();
+        }
+    }
+
     void StateManagement::ErrorHandler(){
         if(recoveryAction.RecoveryActionHandler(&errorMessage)){
             if(errorOccurred){
@@ -208,6 +241,7 @@ namespace ara::sm {
                 }
             }
             std::cout << errorMessage << std::endl;
+
         }
     }
 
@@ -223,6 +257,10 @@ namespace ara::sm {
         killFlag = true;
     }
 
+    bool StateManagement::GetShutdownFlag() const {
+        return rapidShutdownFlag;
+    }
+
     void StateManagement::ConnectClientToServer(std::string clientID, com::PowerMode* client){
         communicationGroupServer.AddClientToGroup(clientID, client);
     }
@@ -232,6 +270,7 @@ namespace ara::sm {
     }
 
     StateManagement::StateManagement(exec::StateClient* sc, exec::ExecutionClient* ec) :
+
         myUpdateRequest{com::UpdateRequest()},
         myNetworkHandle{com::NetworkHandle()},
         triggerOut{com::TriggerOut()},
@@ -239,8 +278,9 @@ namespace ara::sm {
         triggerInOut{com::TriggerInOut()},
         internalState{FunctionGroupStateType::Off},
         stateClient{sc},
-        executionClient{ec},
+        ecuResetRequest{dia::EcuResetRequest()},
         killFlag{false},
+        executionClient{ec},
         errorOccurred{false} {}
 
     ErrorType StateManagement::SetAllFunctionGroupsState(const FunctionGroupListType &fgList,

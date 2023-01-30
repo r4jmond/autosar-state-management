@@ -10,6 +10,7 @@
 #include "trigger_out.h"
 #include "network_handle.h"
 #include "state_client.h"
+#include "ecu_reset_request.h"
 #include "execution_client.h"
 #include "communication_group_server.h"
 #include "recovery_action.h"
@@ -34,13 +35,18 @@ namespace ara::sm {
         com::TriggerInOut triggerInOut;
         FunctionGroupStateType internalState;
         exec::StateClient* stateClient;
-        exec::ExecutionClient* executionClient;
+        dia::EcuResetRequest ecuResetRequest;
+        bool GetShutdownFlag() const;
         phm::RecoveryAction<std::string> recoveryAction;
         com::CommunicationGroupServer<com::PowerMode*> communicationGroupServer;
-
     private:
         /** @brief SM kill flag */
         bool killFlag;
+        /** @brief Rapid shutdown flag */
+        bool rapidShutdownFlag;
+        exec::ExecutionClient* executionClient;
+
+        DiagnosticReset diagnosticReset;
 
         /** @brief SM error occurred flag */
         bool errorOccurred;
@@ -83,6 +89,9 @@ namespace ara::sm {
          *  @details Should work in 'Update' SM state.
          *  Handles all requests. */
         void UpdateRequestHandlerUpdate();
+
+        /** @brief Checks for ECU Reset Requests and handles them */
+        void EcuResetRequestHandler();
 
         /** @brief Checks if given FunctionGroupList is valid
          * @param[in] fgList - FunctionGroupList to be checked.

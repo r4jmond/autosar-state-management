@@ -20,6 +20,8 @@ set(SRCS
         contains.h
         state_client.h
         state_client.cpp
+        ecu_reset_request.h
+        ecu_reset_request.cpp
         recovery_action.h
         power_mode.cpp
         power_mode.h
