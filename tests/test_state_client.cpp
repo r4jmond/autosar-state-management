@@ -1,25 +1,12 @@
-#include "gmock/gmock.h"
-#include "gtest/gtest.h"
+
 #include "sm_tests.h"
 
-namespace ara::exec {
-    /* Mock StateClient for unit testing. */
-    class MockStateClient : public StateClient {
-    public:
-        MOCK_METHOD(ExecErrc, SetState, (std::string fgName, sm::FunctionGroupStateType fgState));
-        MOCK_METHOD(ExecErrc, MachineSetState, (sm::MachineStateType machineState));
-        MOCK_METHOD(void, undefinedStateCallback, ());
-    };
-}
 
-
-TEST(testSuiteSM, testComSetState)
+TEST_F(smTests, testComSetState)
 {
-    ara::exec::MockStateClient MyStateClient;
-    EXPECT_CALL(MyStateClient, SetState(ara::sm::FunctionGroupNameType::com,
+    EXPECT_CALL(mySC, SetState(ara::sm::FunctionGroupNameType::com,
                                         ara::sm::FunctionGroupStateType::Off));
-    MyStateClient.SetState(ara::sm::FunctionGroupNameType::com,
-                           ara::sm::FunctionGroupStateType::Off);
+    mySC.SetState(ara::sm::FunctionGroupNameType::com,ara::sm::FunctionGroupStateType::Off);
 }
 
 TEST_F(smTests, testSMSetStateOn)
@@ -43,9 +30,7 @@ TEST_F(smTests, testSMSetStateOff)
 
 TEST_F(smTests, testSMSetStateUndefined)
 {
-    ara::exec::MockStateClient MyStateClient;
-    mySM.stateClient = &MyStateClient;
-    EXPECT_CALL(MyStateClient, undefinedStateCallback);
+    EXPECT_CALL(mySC, undefinedStateCallback);
 
     EXPECT_EQ(mySM.internalState, ara::sm::FunctionGroupStateType::Off);
     mySM.stateClient->SmSetState((ara::sm::FunctionGroupStateType) ara::sm::MachineStateType::Restart);
