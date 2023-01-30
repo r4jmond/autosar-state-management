@@ -149,7 +149,6 @@ namespace ara::sm {
                     else {
                         newUpdateStatus = ErrorType::kFailed;
                     }
-
                     break;
                 case com::UpdateRequest::RequestType::kResetMachine:
                         // persist all information within the machine before reset
@@ -201,6 +200,17 @@ namespace ara::sm {
         }
     }
 
+    void StateManagement::ErrorHandler(){
+        if(recoveryAction.RecoveryActionHandler(&errorMessage)){
+            if(errorOccurred){
+                if (stateClient != nullptr) {
+                    stateClient->MachineSetState(MachineStateType::Restart);
+                }
+            }
+            std::cout << errorMessage << std::endl;
+        }
+    }
+
     bool StateManagement::CheckFunctionGroupList(FunctionGroupListType const &fgList) {
 
         std::vector<std::string> functionGroupListVec = std::ref(functionGroupList);
@@ -213,6 +223,14 @@ namespace ara::sm {
         killFlag = true;
     }
 
+    void StateManagement::ConnectClientToServer(std::string clientID, com::PowerMode* client){
+        communicationGroupServer.AddClientToGroup(clientID, client);
+    }
+
+    void StateManagement::SendPowerModeStatus(std::string mode){
+        communicationGroupServer.Broadcast(mode);
+    }
+
     StateManagement::StateManagement(exec::StateClient* sc, exec::ExecutionClient* ec) :
         myUpdateRequest{com::UpdateRequest()},
         myNetworkHandle{com::NetworkHandle()},
@@ -222,7 +240,8 @@ namespace ara::sm {
         internalState{FunctionGroupStateType::Off},
         stateClient{sc},
         executionClient{ec},
-        killFlag{false} {}
+        killFlag{false},
+        errorOccurred{false} {}
 
     ErrorType StateManagement::SetAllFunctionGroupsState(const FunctionGroupListType &fgList,
                                                          FunctionGroupStateType fgState) const {
