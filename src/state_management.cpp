@@ -153,15 +153,6 @@ namespace ara::sm {
         }
     }
 
-    void StateManagement::ErrorHandler(){
-        if(recoveryAction.RecoveryActionHandler(&errorMessage)){
-            if(errorOccurred){
-                //todo MachineSetState(restart);
-            }
-            std::cout << errorMessage << std::endl;
-        }
-    }
-
     bool StateManagement::CheckFunctionGroupList(FunctionGroupListType const &fgList) {
 
         std::vector<std::string> functionGroupListVec = std::ref(functionGroupList);
@@ -172,14 +163,6 @@ namespace ara::sm {
 
     void StateManagement::Kill() {
         killFlag = true;
-    }
-
-    void StateManagement::ConnectClientToServer(std::string clientID, com::PowerMode* client){
-        communicationGroupServer.AddClientToGroup(clientID, client);
-    }
-
-    void StateManagement::SendPowerModeStatus(std::string mode){
-        communicationGroupServer.Broadcast(mode);
     }
 
     StateManagement::StateManagement(exec::StateClient* sc, exec::ExecutionClient* ec) :

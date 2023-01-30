@@ -11,9 +11,6 @@
 #include "network_handle.h"
 #include "state_client.h"
 #include "execution_client.h"
-#include "communication_group_server.h"
-#include "recovery_action.h"
-#include "diagnostic_reset.h"
 
 namespace ara::sm {
     /** @brief Class StateManagement to be used by Update and Configuration Management.
@@ -35,16 +32,9 @@ namespace ara::sm {
         FunctionGroupStateType internalState;
         exec::StateClient* stateClient;
         exec::ExecutionClient* executionClient;
-        phm::RecoveryAction<std::string> recoveryAction;
-        com::CommunicationGroupServer<com::PowerMode*> communicationGroupServer;
-
     private:
         /** @brief SM kill flag */
         bool killFlag;
-        /** @brief SM error occurred flag */
-        bool errorOccurred;
-        /** @brief String to store error message from phm */
-        std::string errorMessage;
         /** @brief Function handling SM 'On' State operations */
         void On_Actions();
         /** @brief Function handling SM 'Off' State operations */
@@ -53,12 +43,6 @@ namespace ara::sm {
         void TriggerInHandler();
         /** @brief Function handling TriggerInOut */
         void TriggerInOutHandler();
-        /** @brief Function used to add Client Processes to Server */
-        void ConnectClientToServer(std::string clientID, com::PowerMode* client);
-        /** @brief Function to check if PHM report errors and providing recovery action for them */
-        void ErrorHandler();
-        /** @brief Function sending power mode change to all processes */
-        void SendPowerModeStatus(std::string mode);
         /** @brief Function Updating SM State on EM request
         *   @details After updating it reports it's internal state to EM and TriggerOut.
         */

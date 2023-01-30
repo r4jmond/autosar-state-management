@@ -13,8 +13,6 @@ add_executable( gTests_all
         test_trigger_out.cpp
         test_trigger_in_out.cpp
         test_execution_client.cpp
-        test_communication_group_server.cpp
-        test_recovery_action.cpp
         mocks/mock_execution_client.h
         mocks/mock_state_client.h)
 
