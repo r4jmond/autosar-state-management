@@ -1,24 +1,12 @@
-#include "gmock/gmock.h"
-#include "gtest/gtest.h"
+
 #include "sm_tests.h"
 
-namespace ara::exec {
-    /* Mock StateClient for unit testing. */
-    class MockStateClient : public StateClient {
-    public:
-        MOCK_METHOD(ExecErrc, SetState, (std::string fgName, sm::FunctionGroupStateType fgState));
-        MOCK_METHOD(ExecErrc, MachineSetState, (sm::MachineStateType machineState));
-    };
-}
 
-
-TEST(testSuiteSM, testComSetState)
+TEST_F(smTests, testComSetState)
 {
-    ara::exec::MockStateClient MyStateClient;
-    EXPECT_CALL(MyStateClient, SetState(ara::sm::FunctionGroupNameType::com,
+    EXPECT_CALL(mySC, SetState(ara::sm::FunctionGroupNameType::com,
                                         ara::sm::FunctionGroupStateType::Off));
-    MyStateClient.SetState(ara::sm::FunctionGroupNameType::com,
-                           ara::sm::FunctionGroupStateType::Off);
+    mySC.SetState(ara::sm::FunctionGroupNameType::com,ara::sm::FunctionGroupStateType::Off);
 }
 
 TEST_F(smTests, testSMSetStateOn)
@@ -42,10 +30,21 @@ TEST_F(smTests, testSMSetStateOff)
 
 TEST_F(smTests, testSMSetStateUndefined)
 {
+    EXPECT_CALL(mySC, undefinedStateCallback);
+
     EXPECT_EQ(mySM.internalState, ara::sm::FunctionGroupStateType::Off);
-    mySM.stateClient->SmSetState((ara::sm::FunctionGroupStateType) ara::sm::MachineStateType::Startup);
+    mySM.stateClient->SmSetState((ara::sm::FunctionGroupStateType) ara::sm::MachineStateType::Restart);
     // let changes to be applied
     using namespace std::chrono_literals;
     std::this_thread::sleep_for(500ms);
     EXPECT_EQ(mySM.internalState, ara::sm::FunctionGroupStateType::Off);
+}
+
+TEST_F(smTests, testInitialStateTransitionResultSuccess)
+{
+    mySM.stateClient->SetInitialMachineStateTransitionResult(ara::sm::ErrorType::kSuccess);
+    // let changes to be applied
+    using namespace std::chrono_literals;
+    std::this_thread::sleep_for(500ms);
+    EXPECT_EQ(mySM.internalState, ara::sm::FunctionGroupStateType::On);
 }
