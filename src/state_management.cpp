@@ -63,6 +63,9 @@ namespace ara::sm {
         if (stateClient != nullptr) {
             internalState = stateClient->SmGetState();
         }
+        if (executionClient != nullptr) {
+            executionClient->ReportApplicationState(internalState);
+        }
     }
 
     void StateManagement::UpdateRequestHandler() {
@@ -157,7 +160,7 @@ namespace ara::sm {
         killFlag = true;
     }
 
-    StateManagement::StateManagement(exec::StateClient* sc) :
+    StateManagement::StateManagement(exec::StateClient* sc, exec::ExecutionClient* ec) :
         myUpdateRequest{com::UpdateRequest()},
         myNetworkHandle{com::NetworkHandle()},
         triggerOut{com::TriggerOut()},
@@ -165,5 +168,6 @@ namespace ara::sm {
         triggerInOut{com::TriggerInOut()},
         internalState{FunctionGroupStateType::Off},
         stateClient{sc},
+        executionClient{ec},
         killFlag{false} {}
 }

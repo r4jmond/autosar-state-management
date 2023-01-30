@@ -9,6 +9,7 @@
 #include "mocks/mock_state_client.h"
 #include "sm_types.h"
 #include "gtest/gtest.h"
+#include "mocks/mock_execution_client.h"
 
 /**
  * @brief Text fixture for SM tests.
@@ -16,10 +17,13 @@
  */
 class smTests : public testing::Test {
 protected:
-    ::testing::NiceMock<ara::exec::MockStateClient> mySC;
+    ara::exec::StateClient mySC;
+    testing::NiceMock<ara::exec::MockExecutionClient> myEC;
+    testing::NiceMock<ara::exec::MockStateClient> mySC;
     ara::sm::StateManagement mySM;
     std::thread smThread;
-    smTests() : mySM{ara::sm::StateManagement(&mySC)} {
+    smTests() : mySC{ara::exec::StateClient()},
+                mySM{ara::sm::StateManagement(&mySC, &myEC)} {
         smThread = std::thread(&ara::sm::StateManagement::Work, &mySM);
     }
     ~smTests() override {

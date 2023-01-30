@@ -16,6 +16,7 @@ set(SRCS
         network_handle.cpp
         network_handle.h
         sm_types.h
+        execution_client.h
         contains.h
         state_client.h
         state_client.cpp)

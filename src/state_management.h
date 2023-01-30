@@ -10,13 +10,14 @@
 #include "trigger_out.h"
 #include "network_handle.h"
 #include "state_client.h"
+#include "execution_client.h"
 
 namespace ara::sm {
     /** @brief Class StateManagement to be used by Update and Configuration Management.
      *         Fills [SWS_SM_XXXXX]. */
     class StateManagement {
     public:
-        explicit StateManagement(exec::StateClient* sc);
+        explicit StateManagement(exec::StateClient* sc, exec::ExecutionClient* ec);
         /** @brief Start function of the SM */
         void Work();
         /** @brief Function killing SM operation */
@@ -30,6 +31,7 @@ namespace ara::sm {
         com::TriggerInOut triggerInOut;
         FunctionGroupStateType internalState;
         exec::StateClient* stateClient;
+        exec::ExecutionClient* executionClient;
     private:
         /** @brief SM kill flag */
         bool killFlag;
@@ -41,7 +43,9 @@ namespace ara::sm {
         void TriggerInHandler();
         /** @brief Function handling TriggerInOut */
         void TriggerInOutHandler();
-        /** @brief Function Updating SM State on EM request */
+        /** @brief Function Updating SM State on EM request
+        * @details It also reports it's internal state to EM
+        */
         void UpdateSMState();
 
         /** @brief Checks for Update Requests and handles them */
