@@ -140,7 +140,12 @@ namespace ara::sm {
                     break;
                 case com::UpdateRequest::RequestType::kStopUpdateSession:
                     exec::ExecErrc setStateError;
-                    setStateError = stateClient->SmSetState(FunctionGroupStateType::Update);
+                    if (stateClient != nullptr) {
+                        setStateError = stateClient->SmSetState(FunctionGroupStateType::On);
+                    }
+                    else {
+                        setStateError = exec::ExecErrc::kGeneralError;
+                    }
                     newUpdateStatus = (setStateError == exec::ExecErrc::kSuccess) ?
                                       ErrorType::kSuccess : ErrorType::kFailed;
                     break;
@@ -155,7 +160,7 @@ namespace ara::sm {
                         newUpdateStatus = ErrorType::kSuccess;
                     }
                     else {
-                        newUpdateStatus = ErrorType::kRejected;
+                        newUpdateStatus = ErrorType::kFailed;
                     }
                     break;
                 case com::UpdateRequest::RequestType::kVerifyUpdate:

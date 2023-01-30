@@ -111,8 +111,9 @@ TEST_F(smTests, testPersistSessionStatus) {
 //    std::this_thread::sleep_for(20ms);
 //    notifier = mySM.triggerOut.GetNotifier();
 
+    notifier = mySM.triggerOut.GetNotifier();
     /** @test SM shall be in update state after restart - it shall persist information about ongoing update session */
-    ASSERT_EQ(notifier, ara::sm::FunctionGroupStateType::Update);
+    EXPECT_EQ(notifier, ara::sm::FunctionGroupStateType::Update);
 }
 
 /** @brief Tests [SWS_SM_00202] - Reset execution
@@ -176,6 +177,7 @@ TEST_F(smTests, testStopUpdateSession)
     std::this_thread::sleep_for(20ms);
     /** @test Assert that the SM is in Update State */
     ASSERT_EQ(ara::sm::FunctionGroupStateType::Update, mySM.triggerOut.GetNotifier());
+
     /* Stop update session */
     errorCode =  mySM.myUpdateRequest.StopUpdateSession();
     /** @test SM shall accept StopUpdateSession request */
