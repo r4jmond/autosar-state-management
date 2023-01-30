@@ -51,9 +51,6 @@ namespace ara::exec {
         */
         sm::FunctionGroupStateType SmGetState();
 
-#pragma clang diagnostic push
-#pragma ide diagnostic ignored "NotImplementedFunctions"
-
         /**
         * @brief Requests a state transition for MachineFG.
         * @details Will be mocked for tests.
@@ -69,8 +66,7 @@ namespace ara::exec {
         * @param[in] fgState - FunctionGroupState to be set
         * @return error code
         */
-        ExecErrc SetState(std::string fgName, sm::FunctionGroupStateType fgState);
-#pragma clang diagnostic pop
+        virtual ExecErrc SetState(std::string fgName, sm::FunctionGroupStateType fgState) = 0;
 
     };
 }

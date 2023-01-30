@@ -209,7 +209,6 @@ TEST_F(smTests, testPrepareUpdate)
     ASSERT_EQ(notifier, ara::sm::FunctionGroupStateType::On);
 
     ara::sm::FunctionGroupListType testFGList {
-            ara::sm::FunctionGroupNameType::sm,
             ara::sm::FunctionGroupNameType::exec,
             ara::sm::FunctionGroupNameType::phm,
             ara::sm::FunctionGroupNameType::ucm
@@ -258,7 +257,6 @@ TEST_F(smTests, testVerifyUpdate)
     ASSERT_EQ(notifier, ara::sm::FunctionGroupStateType::On);
 
     ara::sm::FunctionGroupListType testFGList {
-            ara::sm::FunctionGroupNameType::sm,
             ara::sm::FunctionGroupNameType::exec,
             ara::sm::FunctionGroupNameType::phm,
             ara::sm::FunctionGroupNameType::ucm
@@ -306,7 +304,6 @@ TEST_F(smTests, testPrepareRollback)
     ASSERT_EQ(notifier, ara::sm::FunctionGroupStateType::On);
 
     ara::sm::FunctionGroupListType testFGList {
-            ara::sm::FunctionGroupNameType::sm,
             ara::sm::FunctionGroupNameType::exec,
             ara::sm::FunctionGroupNameType::phm,
             ara::sm::FunctionGroupNameType::ucm

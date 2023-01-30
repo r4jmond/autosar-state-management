@@ -135,6 +135,7 @@ namespace ara::sm {
         if (requestMsg.status) {
             ErrorType newUpdateStatus;
             exec::ExecErrc setStateError;
+//            FunctionGroupListType fgList;
             switch (requestMsg.type) {
                 case com::UpdateRequest::RequestType::kRequestUpdateSession:
                     newUpdateStatus = ErrorType::kNotAllowedMultipleUpdateSessions;
@@ -151,7 +152,7 @@ namespace ara::sm {
 
                     break;
                 case com::UpdateRequest::RequestType::kResetMachine:
-                        // todo persist all information within the machine
+                        // persist all information within the machine before reset
                         if (stateClient != nullptr) {
                             setStateError = stateClient->MachineSetState(MachineStateType::Restart);
                             newUpdateStatus = (setStateError == exec::ExecErrc::kSuccess) ?
@@ -163,8 +164,7 @@ namespace ara::sm {
                     break;
                 case com::UpdateRequest::RequestType::kPrepareUpdate:
                     if (CheckFunctionGroupList(myUpdateRequest.GetFunctionGroupList())) {
-                        //todo prepare update
-                        newUpdateStatus = ErrorType::kSuccess;
+                        newUpdateStatus = SetAllFunctionGroupsState(FunctionGroupStateType::Update);
                     }
                     else {
                         newUpdateStatus = ErrorType::kFailed;
@@ -173,7 +173,7 @@ namespace ara::sm {
                 case com::UpdateRequest::RequestType::kVerifyUpdate:
                     if (myUpdateRequest.GetUpdateStatus() == ErrorType::kSuccess) {
                         if (CheckFunctionGroupList(myUpdateRequest.GetFunctionGroupList())) {
-                            //todo verify update
+                            // verify update
                             newUpdateStatus = ErrorType::kSuccess;
                         } else {
                             newUpdateStatus = ErrorType::kFailed;
@@ -222,4 +222,20 @@ namespace ara::sm {
         stateClient{sc},
         executionClient{ec},
         killFlag{false} {}
+
+    ErrorType StateManagement::SetAllFunctionGroupsState(FunctionGroupStateType fgState) {
+        if (stateClient != nullptr) {
+            for (const std::string& fgName: functionGroupList) {
+                auto setStateError = stateClient->SetState(fgName, fgState);
+                if (setStateError != exec::ExecErrc::kSuccess) {
+                    return ErrorType::kFailed;
+                }
+            }
+        }
+        else
+        {
+            return ErrorType::kFailed;
+        }
+        return ErrorType::kSuccess;
+    }
 }
