@@ -4,6 +4,7 @@
   * @brief CommunicationGroupServer template used by state machine and processes */
 
 #include "power_mode.h"
+#include <map>
 
 namespace ara::com {
         /** @brief Class Template CommunicationGroupServer used by state machine to communicate with processes using
