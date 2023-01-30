@@ -72,11 +72,13 @@ namespace ara::sm {
          * @return true if list is valid, false otherwise */
         bool CheckFunctionGroupList(FunctionGroupListType const &fgList);
 
-        /** @brief Sets all function groups from functionGroupList to given state.
+        /** @brief Sets all function groups from fgList to given state.
+         *  @param[in] fgList - list of function groups to be set.
          *  @param[in] fgState - new function group state.
          *  @return error code
          */
-        ErrorType SetAllFunctionGroupsState(FunctionGroupStateType fgState);
+        [[nodiscard]] ErrorType SetAllFunctionGroupsState(const FunctionGroupListType &fgList,
+                                                             FunctionGroupStateType fgState) const;
 
         /** @brief List of used FunctionGroups. Fills [SWS_SM_00001].
         *  @details Normally it would be read from manifest, but we use static configuration here */

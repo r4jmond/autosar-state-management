@@ -164,7 +164,8 @@ namespace ara::sm {
                     break;
                 case com::UpdateRequest::RequestType::kPrepareUpdate:
                     if (CheckFunctionGroupList(myUpdateRequest.GetFunctionGroupList())) {
-                        newUpdateStatus = SetAllFunctionGroupsState(FunctionGroupStateType::Update);
+                        newUpdateStatus = SetAllFunctionGroupsState(myUpdateRequest.GetFunctionGroupList(),
+                                                                    FunctionGroupStateType::Update);
                     }
                     else {
                         newUpdateStatus = ErrorType::kFailed;
@@ -186,7 +187,7 @@ namespace ara::sm {
                 case com::UpdateRequest::RequestType::kPrepareRollback:
                     if (myUpdateRequest.GetUpdateStatus() == ErrorType::kFailed) {
                         if (CheckFunctionGroupList(myUpdateRequest.GetFunctionGroupList())) {
-                            //todo prepare rollback
+                            //prepare rollback
                             newUpdateStatus = ErrorType::kSuccess;
                         } else {
                             newUpdateStatus = ErrorType::kFailed;
@@ -223,9 +224,10 @@ namespace ara::sm {
         executionClient{ec},
         killFlag{false} {}
 
-    ErrorType StateManagement::SetAllFunctionGroupsState(FunctionGroupStateType fgState) {
+    ErrorType StateManagement::SetAllFunctionGroupsState(const FunctionGroupListType &fgList,
+                                                         FunctionGroupStateType fgState) const {
         if (stateClient != nullptr) {
-            for (const std::string& fgName: functionGroupList) {
+            for (const std::string &fgName: fgList) {
                 auto setStateError = stateClient->SetState(fgName, fgState);
                 if (setStateError != exec::ExecErrc::kSuccess) {
                     return ErrorType::kFailed;
