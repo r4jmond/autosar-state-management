@@ -100,10 +100,9 @@ jobs:
         uses: deep5050/cppcheck-action@v3.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN}}
-          language: c++
           std: c++17
           enable: all
-          addon: cert.py
+          other_options: --language=c++ --addon=cert.py
   
       - name: Upload cppcheck result
         uses: actions/upload-artifact@v3
