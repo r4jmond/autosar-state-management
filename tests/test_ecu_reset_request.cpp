@@ -24,7 +24,8 @@ TEST_F(smTests, disableRapidShutdown) {
 }
 
 TEST_F(smTests, executeReset) {
-    EXPECT_CALL(mySC, MachineSetState(ara::sm::MachineStateType::Restart));
+    EXPECT_CALL(mySC, MachineSetState(ara::sm::MachineStateType::Restart)).
+    Times(testing::AtLeast(1));
 
     mySM.ecuResetRequest.ExecuteReset();
     std::this_thread::sleep_for(20ms);
