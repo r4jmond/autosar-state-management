@@ -41,7 +41,9 @@ namespace ara::sm {
         /** function group switched off. */
         Off,
         /** function group working. */
-        On
+        On,
+        /** function group update in progress */
+        Update
     };
 
     /**

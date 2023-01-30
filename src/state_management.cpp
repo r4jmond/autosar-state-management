@@ -6,38 +6,42 @@ namespace ara::sm {
 
     void StateManagement::Work() {
         std::cout << "Starting work" << std::endl;
+        /** @brief Start-up Sequence - Figure 7.1 SWS_StateManagement */
         if (stateClient != nullptr) {
             if (stateClient->GetInitialMachineStateTransitionResult() == ErrorType::kSuccess) {
                 stateClient->SmSetState(FunctionGroupStateType::On);
             }
+            /* Restart machine if Initial MachineState Transition not successful */
             else stateClient->MachineSetState(MachineStateType::Restart);
         }
+
         while (!killFlag) {
             if (internalState == FunctionGroupStateType::Off) {
-                On_Actions();
-            }
-            else if (internalState == FunctionGroupStateType::On) {
                 Off_Actions();
             }
-            triggerOut.SetNotifier(internalState);
+            else if (internalState == FunctionGroupStateType::On) {
+                On_Actions();
+            }
+            else if (internalState == FunctionGroupStateType::Update) {
+                UpdateRequestHandlerUpdate();
+            }
+            UpdateSMState();
         }
         std::cout << "Finished work" << std::endl;
     }
 
     void StateManagement::On_Actions() {
         EcuResetRequestHandler();
-        UpdateRequestHandler();
+        UpdateRequestHandlerOn();
         TriggerInHandler();
         TriggerInOutHandler();
-        UpdateSMState();
     }
 
     void StateManagement::Off_Actions() {
         EcuResetRequestHandler();
-        UpdateRequestHandler();
+        UpdateRequestHandlerOff();
         TriggerInHandler();
         TriggerInOutHandler();
-        UpdateSMState();
     }
 
     void StateManagement::TriggerInHandler() {
@@ -65,60 +69,113 @@ namespace ara::sm {
         if (stateClient != nullptr) {
             internalState = stateClient->SmGetState();
         }
+        if (executionClient != nullptr) {
+            executionClient->ReportApplicationState(internalState);
+        }
+        triggerOut.SetNotifier(internalState);
     }
 
-    void StateManagement::UpdateRequestHandler() {
+
+    void StateManagement::UpdateRequestHandlerOff() {
         com::UpdateRequest::RequestMsg requestMsg =  myUpdateRequest.GetRequestMsg();
         if (requestMsg.status) {
             ErrorType newUpdateStatus;
             switch (requestMsg.type) {
                 case com::UpdateRequest::RequestType::kRequestUpdateSession:
-                    if (myUpdateRequest.IsUpdateSession()) {
-                        newUpdateStatus = ErrorType::kNotAllowedMultipleUpdateSessions;
-                    }
-                    else {
-                        myUpdateRequest.SetUpdateSession(true);
-                        newUpdateStatus = ErrorType::kSuccess;
-                    }
+                    /* intentional fallback */
+                case com::UpdateRequest::RequestType::kResetMachine:
+                    /* intentional fallback */
+                case com::UpdateRequest::RequestType::kStopUpdateSession:
+                    /* intentional fallback */
+                case com::UpdateRequest::RequestType::kPrepareUpdate:
+                    /* intentional fallback */
+                case com::UpdateRequest::RequestType::kVerifyUpdate:
+                    /* intentional fallback */
+                case com::UpdateRequest::RequestType::kPrepareRollback:
+                    newUpdateStatus = ErrorType::kRejected;
+                    break;
+                default:
+                    newUpdateStatus = ErrorType::kInvalidValue;
+                    break;
+            }
+            myUpdateRequest.SendResponse(newUpdateStatus);
+        }
+    }
+
+    void StateManagement::UpdateRequestHandlerOn() {
+        com::UpdateRequest::RequestMsg requestMsg =  myUpdateRequest.GetRequestMsg();
+        if (requestMsg.status) {
+            ErrorType newUpdateStatus;
+            switch (requestMsg.type) {
+                case com::UpdateRequest::RequestType::kRequestUpdateSession:
+                    exec::ExecErrc setStateError;
+                    setStateError = stateClient->SmSetState(FunctionGroupStateType::Update);
+                    newUpdateStatus = (setStateError == exec::ExecErrc::kSuccess) ?
+                                      ErrorType::kSuccess : ErrorType::kFailed;
+                    break;
+                case com::UpdateRequest::RequestType::kResetMachine:
+                    /* intentional fallback */
+                case com::UpdateRequest::RequestType::kStopUpdateSession:
+                    /* intentional fallback */
+                case com::UpdateRequest::RequestType::kPrepareUpdate:
+                    /* intentional fallback */
+                case com::UpdateRequest::RequestType::kVerifyUpdate:
+                    /* intentional fallback */
+                case com::UpdateRequest::RequestType::kPrepareRollback:
+                    newUpdateStatus = ErrorType::kRejected;
+                    break;
+                default:
+                    newUpdateStatus = ErrorType::kInvalidValue;
+                    break;
+            }
+            myUpdateRequest.SendResponse(newUpdateStatus);
+        }
+    }
+
+    void StateManagement::UpdateRequestHandlerUpdate() {
+        com::UpdateRequest::RequestMsg requestMsg =  myUpdateRequest.GetRequestMsg();
+        if (requestMsg.status) {
+            ErrorType newUpdateStatus;
+            exec::ExecErrc setStateError;
+//            FunctionGroupListType fgList;
+            switch (requestMsg.type) {
+                case com::UpdateRequest::RequestType::kRequestUpdateSession:
+                    newUpdateStatus = ErrorType::kNotAllowedMultipleUpdateSessions;
                     break;
                 case com::UpdateRequest::RequestType::kStopUpdateSession:
-                    if (myUpdateRequest.IsUpdateSession()) {
-                        myUpdateRequest.SetUpdateSession(false);
-                        newUpdateStatus = ErrorType::kSuccess;
+                    if (stateClient != nullptr) {
+                        setStateError = stateClient->SmSetState(FunctionGroupStateType::On);
+                        newUpdateStatus = (setStateError == exec::ExecErrc::kSuccess) ?
+                                          ErrorType::kSuccess : ErrorType::kFailed;
                     }
                     else {
-                        newUpdateStatus = ErrorType::kRejected;
+                        newUpdateStatus = ErrorType::kFailed;
                     }
                     break;
                 case com::UpdateRequest::RequestType::kResetMachine:
-                    if (myUpdateRequest.IsUpdateSession()) {
-                        // todo persist all information within the machine
-                        // todo reset machine
-                        newUpdateStatus = ErrorType::kSuccess;
-                    }
-                    else {
-                        newUpdateStatus = ErrorType::kRejected;
-                    }
-                    break;
-                case com::UpdateRequest::RequestType::kPrepareUpdate:
-                    if (myUpdateRequest.IsUpdateSession()) {
-                        if (CheckFunctionGroupList(myUpdateRequest.GetFunctionGroupList())) {
-                            //todo prepare update
-                            newUpdateStatus = ErrorType::kSuccess;
+                        // persist all information within the machine before reset
+                        if (stateClient != nullptr) {
+                            setStateError = stateClient->MachineSetState(MachineStateType::Restart);
+                            newUpdateStatus = (setStateError == exec::ExecErrc::kSuccess) ?
+                                              ErrorType::kSuccess : ErrorType::kFailed;
                         }
                         else {
                             newUpdateStatus = ErrorType::kFailed;
                         }
+                    break;
+                case com::UpdateRequest::RequestType::kPrepareUpdate:
+                    if (CheckFunctionGroupList(myUpdateRequest.GetFunctionGroupList())) {
+                        newUpdateStatus = SetAllFunctionGroupsState(myUpdateRequest.GetFunctionGroupList(),
+                                                                    FunctionGroupStateType::Update);
                     }
                     else {
-                        newUpdateStatus = ErrorType::kRejected;
+                        newUpdateStatus = ErrorType::kFailed;
                     }
                     break;
                 case com::UpdateRequest::RequestType::kVerifyUpdate:
-                    if ((myUpdateRequest.IsUpdateSession()) &&
-                        (myUpdateRequest.GetUpdateStatus() == ErrorType::kSuccess)) {
+                    if (myUpdateRequest.GetUpdateStatus() == ErrorType::kSuccess) {
                         if (CheckFunctionGroupList(myUpdateRequest.GetFunctionGroupList())) {
-                            //todo verify update
+                            // verify update
                             newUpdateStatus = ErrorType::kSuccess;
                         } else {
                             newUpdateStatus = ErrorType::kFailed;
@@ -129,10 +186,9 @@ namespace ara::sm {
                     }
                     break;
                 case com::UpdateRequest::RequestType::kPrepareRollback:
-                    if ((myUpdateRequest.IsUpdateSession()) &&
-                        (myUpdateRequest.GetUpdateStatus() == ErrorType::kFailed)) {
+                    if (myUpdateRequest.GetUpdateStatus() == ErrorType::kFailed) {
                         if (CheckFunctionGroupList(myUpdateRequest.GetFunctionGroupList())) {
-                            //todo prepare rollback
+                            //prepare rollback
                             newUpdateStatus = ErrorType::kSuccess;
                         } else {
                             newUpdateStatus = ErrorType::kFailed;
@@ -142,7 +198,6 @@ namespace ara::sm {
                         newUpdateStatus = ErrorType::kRejected;
                     }
             }
-
             myUpdateRequest.SendResponse(newUpdateStatus);
         }
     }
@@ -176,6 +231,18 @@ namespace ara::sm {
         }
     }
 
+    void StateManagement::ErrorHandler(){
+        if(recoveryAction.RecoveryActionHandler(&errorMessage)){
+            if(errorOccurred){
+                if (stateClient != nullptr) {
+                    stateClient->MachineSetState(MachineStateType::Restart);
+                }
+            }
+            std::cout << errorMessage << std::endl;
+
+        }
+    }
+
     bool StateManagement::CheckFunctionGroupList(FunctionGroupListType const &fgList) {
 
         std::vector<std::string> functionGroupListVec = std::ref(functionGroupList);
@@ -192,7 +259,16 @@ namespace ara::sm {
         return rapidShutdownFlag;
     }
 
-    StateManagement::StateManagement(exec::StateClient* sc) :
+    void StateManagement::ConnectClientToServer(std::string clientID, com::PowerMode* client){
+        communicationGroupServer.AddClientToGroup(clientID, client);
+    }
+
+    void StateManagement::SendPowerModeStatus(std::string mode){
+        communicationGroupServer.Broadcast(mode);
+    }
+
+    StateManagement::StateManagement(exec::StateClient* sc, exec::ExecutionClient* ec) :
+
         myUpdateRequest{com::UpdateRequest()},
         myNetworkHandle{com::NetworkHandle()},
         triggerOut{com::TriggerOut()},
@@ -201,5 +277,24 @@ namespace ara::sm {
         internalState{FunctionGroupStateType::Off},
         stateClient{sc},
         ecuResetRequest{dia::EcuResetRequest()},
-        killFlag{false} {}
+        killFlag{false},
+        executionClient{ec},
+        errorOccurred{false} {}
+
+    ErrorType StateManagement::SetAllFunctionGroupsState(const FunctionGroupListType &fgList,
+                                                         FunctionGroupStateType fgState) const {
+        if (stateClient != nullptr) {
+            for (const std::string &fgName: fgList) {
+                auto setStateError = stateClient->SetState(fgName, fgState);
+                if (setStateError != exec::ExecErrc::kSuccess) {
+                    return ErrorType::kFailed;
+                }
+            }
+        }
+        else
+        {
+            return ErrorType::kFailed;
+        }
+        return ErrorType::kSuccess;
+    }
 }
