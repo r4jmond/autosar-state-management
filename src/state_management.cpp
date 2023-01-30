@@ -6,6 +6,12 @@ namespace ara::sm {
 
     void StateManagement::Work() {
         std::cout << "Starting work" << std::endl;
+        if (stateClient != nullptr) {
+            if (stateClient->GetInitialMachineStateTransitionResult() == ErrorType::kSuccess) {
+                stateClient->SmSetState(FunctionGroupStateType::On);
+            }
+            else stateClient->MachineSetState(MachineStateType::Restart);
+        }
         while (!killFlag) {
             if (internalState == FunctionGroupStateType::Off) {
                 On_Actions();

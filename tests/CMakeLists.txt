@@ -13,7 +13,8 @@ add_executable( gTests_all
         test_trigger_out.cpp
         test_trigger_in_out.cpp
         test_execution_client.cpp
-        mocks/mock_execution_client.h)
+        mocks/mock_execution_client.h
+        mocks/mock_state_client.h)
 
 SET( GTEST_LIBRARIES gtest gtest_main gmock gmock_main )
 target_link_libraries( gTests_all ${GTEST_LIBRARIES} )

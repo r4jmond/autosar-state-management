@@ -6,7 +6,7 @@
 
 #include <thread>
 #include "state_management.h"
-#include "state_client.h"
+#include "mocks/mock_state_client.h"
 #include "sm_types.h"
 #include "gtest/gtest.h"
 #include "mocks/mock_execution_client.h"
@@ -19,6 +19,7 @@ class smTests : public testing::Test {
 protected:
     ara::exec::StateClient mySC;
     testing::NiceMock<ara::exec::MockExecutionClient> myEC;
+    testing::NiceMock<ara::exec::MockStateClient> mySC;
     ara::sm::StateManagement mySM;
     std::thread smThread;
     smTests() : mySC{ara::exec::StateClient()},
