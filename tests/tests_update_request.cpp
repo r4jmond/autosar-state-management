@@ -104,13 +104,8 @@ TEST_F(smTests, testPersistSessionStatus) {
     /** @test Assert that restart request is successful */
     ASSERT_EQ(errorCode, ara::sm::ErrorType::kSuccess);
 
-    //todo fix test
-//    /** Set SM to ON */
-//    mySC.SmSetState(ara::sm::FunctionGroupStateType::On);
-//    /** wait for the changes to propagate */
-//    std::this_thread::sleep_for(20ms);
-//    notifier = mySM.triggerOut.GetNotifier();
-
+    /** wait for the changes to propagate */
+    std::this_thread::sleep_for(20ms);
     notifier = mySM.triggerOut.GetNotifier();
     /** @test SM shall be in update state after restart - it shall persist information about ongoing update session */
     EXPECT_EQ(notifier, ara::sm::FunctionGroupStateType::Update);
